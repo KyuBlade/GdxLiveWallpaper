@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:divider="@drawable/separator"
+              android:orientation="vertical"
+              android:padding="10dp"
+              android:showDividers="middle">
+
+    <com.gdx.wallpaper.setting.ui.SeekerEdit
+        android:id="@+id/cycleTimeEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:editTitle="@string/transition_time_cycle">
+    </com.gdx.wallpaper.setting.ui.SeekerEdit>
+
+    <com.gdx.wallpaper.setting.ui.SeekerEdit
+        android:id="@+id/fadeTimeEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:editTitle="@string/transition_time_fade">
+    </com.gdx.wallpaper.setting.ui.SeekerEdit>
+
+</LinearLayout>

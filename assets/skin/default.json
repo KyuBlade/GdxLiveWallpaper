@@ -1,0 +1,33 @@
+{
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    default: {
+      file: fonts/arial.fnt
+    }
+  },
+  com.badlogic.gdx.graphics.Color:{
+    white: {
+      r: 1,
+      g: 1,
+      b: 1,
+      a: 1
+    },
+    cycling_indicator: {
+      r: 0.25,
+      g: 0.65,
+      b: 0.60,
+      a: 0.75
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle:{
+    default:{
+      font:default,
+      fontColor:white
+    }
+  },
+  com.gdx.wallpaper.setting.ui.ProgressBarIndicator$ProgressBarIndicatorStyle:{
+    default:{
+      color: cycling_indicator,
+      indicatorDrawable: indicator_texture
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<resources>
+
+    <!-- Common -->
+    <string name="app_name">GdxLiveWallpaper</string>
+    <string name="description">Wallpaper description</string>
+    <string name="remove">Remove</string>
+    <string name="add">Add</string>
+    <string name="select_items">Select items</string>
+    <string name="select_all">Select all</string>
+    <string name="done">Done</string>
+    <string name="undefined">Undefined</string>
+    <string name="manage">Manage</string>
+    <string name="none">None</string>
+    <string name="edit">Edit</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="gallery_albums_empty">No albums available.</string>
+    <string name="gallery_images_empty">No images available.</string>
+    <string name="permission_required">Permission required.</string>
+    <string name="type">Type</string>
+
+    <plurals name="images_count">
+        <item quantity="one">%d image</item>
+        <item quantity="other">%d images</item>
+    </plurals>
+    <plurals name="selected_items_count">
+        <item quantity="one">%d item selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+
+    <!-- Playlist -->
+    <string name="playlist_page_name">Playlists</string>
+    <string name="playlist_empty">No playlists currently created.</string>
+    <string name="playlist_edit_name">Name</string>
+    <string name="playlist_wallpaper_unset">"No playlist set.\n Create a new playlist in the live wallpaper settings."</string>
+
+    <!-- Scrolling -->
+    <string name="playlist_scrollable">Scrolling on home</string>
+    <string name="playlist_scroll_type">Scroll type</string>
+    <string name="playlist_scroll_type_none">None</string>
+    <string name="playlist_scroll_type_slide">Slide</string>
+    <string name="playlist_scroll_type_cube">Cube</string>
+
+    <!-- Transition -->
+    <string name="transition">Transition</string>
+    <string name="transition_page_name">Transitions</string>
+    <string name="transition_empty">No transitions currently created</string>
+    <string name="transition_cycling_random_title">Random cycling</string>
+    <string name="transition_cycling_random_description">Wallpapers will be displayed in random order</string>
+    <string name="transition_cycling_progress_title">Display cycling progress</string>
+    <string name="transition_cycling_progress_description"></string>
+    <string name="transition_edit_manage_title">Manage</string>
+    <string name="transition_edit_manage_description">Setting the transitionId</string>
+    <string name="transition_none">None</string>
+    <string name="transition_fade">Fade</string>
+    <string name="transition_time_fade">Fade time</string>
+    <string name="transition_time_cycle">Cycle time</string>
+    <string name="transition_remove_deactivate">The transitionId was used by the current playlist. Playlist deactivated.</string>
+
+    <!-- Collection -->
+    <string name="collection">Collection</string>
+    <string name="collection_page_name">Collections</string>
+    <string name="collection_empty">No collections currently created.</string>
+    <string name="collection_manage_title">Manage</string>
+    <string name="collection_manage_description">Set the images of this collection.</string>
+    <string name="collection_remove_deactivate">The collection was used by the current playlist. Playlist deactivated.</string>
+    <string name="collection_wallpaper_unset">"No collection set for this playlist."</string>
+    <string name="collection_wallpaper_empty">"Your collection contains no images."</string>
+    <string name="collection_entries_empty">No images available in the collection.</string>
+
+    <!-- Dialog -->
+    <string name="dialog_remove_title">Remove confirmation</string>
+    <string name="dialog_remove_playlist_message">Are you sure you want to remove this playlist ?</string>
+    <string name="dialog_remove_transition_message">Are you sure you want to remove this transition ?</string>
+    <string name="dialog_remove_collection_message">Are you sure you want to remove this collection ?</string>
+    <string name="dialog_playlist_edit_name_title">Playlist name</string>
+    <string name="dialog_playlist_edit_name_message">Enter the playlist name</string>
+    <string name="dialog_playlist_edit_transition_title">Choose a transition</string>
+    <string name="dialog_playlist_edit_scroll_title">Choose a scroll type</string>
+    <string name="dialog_transition_edit_name_title">Transition name</string>
+    <string name="dialog_transition_edit_name_message">Enter the transition name</string>
+    <string name="dialog_collection_edit_name_title">Collection name</string>
+    <string name="dialog_collection_edit_name_message">Enter the collection name</string>
+    <string name="dialog_playlist_edit_name_empty_title">Empty name</string>
+    <string name="dialog_playlist_edit_name_empty_message">The playlist name is empty, the playlist will not be saved !</string>
+    <string name="dialog_wallpaper_image_edit_help_title">Help</string>
+    <string name="dialog_wallpaper_image_edit_help_message">Help dialog </string>
+
+</resources>

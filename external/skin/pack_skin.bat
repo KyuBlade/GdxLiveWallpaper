@@ -1,0 +1,2 @@
+java -classpath D:\windows\Downloads\libgdx-nightly-latest\gdx.jar;D:\windows\Downloads\libgdx-nightly-latest\extensions\gdx-tools\gdx-tools.jar com.badlogic.gdx.tools.texturepacker.TexturePacker "D:\common\workspace\GdxLiveWallpaper\external\skin" "D:\common\workspace\GdxLiveWallpaper\assets\skin" default
+pause
