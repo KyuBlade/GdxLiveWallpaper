@@ -1,7 +1,5 @@
 package com.gdx.wallpaper.wallpaper;
 
-import android.util.Log;
-
 import com.badlogic.gdx.math.Vector2;
 
 public class WallpaperHomeInfo {
@@ -95,8 +93,6 @@ public class WallpaperHomeInfo {
     }
 
     public int getScreenCount() {
-        Log.i("Screen", "Step offsets : " + stepOffsets.x);
-        Log.i("Screen", "Step compute : " + (1f / stepOffsets.x));
         return Math.round(1f / stepOffsets.x + 1);
     }
 

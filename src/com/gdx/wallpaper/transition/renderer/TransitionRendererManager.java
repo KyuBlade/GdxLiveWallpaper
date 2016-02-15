@@ -54,7 +54,6 @@ public class TransitionRendererManager<T extends AbstractSurfaceHolder> {
      * @param surfaceHolder the surface to manage
      */
     public void registerSurface(T surfaceHolder) {
-
         instances
                 .add(new TransitionRendererInstance(imageManager, newTransitionRenderer(),
                                                     surfaceHolder,

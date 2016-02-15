@@ -69,17 +69,17 @@ public class ManagedImage {
         return color;
     }
 
-    public int getWidth() {
+    public int getTextureWidth() {
         return texture.getWidth();
     }
 
-    public int getHeight() {
+    public int getTextureHeight() {
         return texture.getHeight();
     }
 
     public void draw(Batch batch) {
         Vector2 scaledSize =
-                Scaling.fill.apply(getWidth(), getHeight(), Gdx.graphics.getWidth(),
+                Scaling.fill.apply(getTextureWidth(), getTextureHeight(), Gdx.graphics.getWidth(),
                                    Gdx.graphics.getHeight());
         batch.draw(texture, 0f, 0f, scaledSize.x, scaledSize.y);
     }

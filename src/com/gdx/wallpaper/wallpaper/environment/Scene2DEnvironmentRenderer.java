@@ -29,6 +29,7 @@ public class Scene2DEnvironmentRenderer extends EnvironmentRenderer {
     public void render(float delta) {
         super.render(delta);
 
+//        stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
     }

@@ -78,7 +78,7 @@ public class TransitionRendererInstance {
     /**
      * Free a texture.
      *
-     * @param image texture to onRemove
+     * @param image texture to remove
      */
     protected void free(ManagedImage image) {
         if (image == null) {
@@ -165,31 +165,38 @@ public class TransitionRendererInstance {
                 endCycling();
             }
         } else {
-            // Create FBO and set it to the surface
-            frameBuffer.begin();
-            batch.begin();
-            batch.setBlendFunction(-1, -1);
-            Gdx.gl20.glBlendFuncSeparate(GL10.GL_SRC_ALPHA,
-                                         GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_ONE, GL10.GL_ONE);
-            if (nextImage != null && nextImage.isLoaded()) {
-                batch.setColor(nextImage.getColor());
-                nextImage.draw(batch);
-            }
-            if (currentImage != null && currentImage.isLoaded()) {
-                batch.setColor(currentImage.getColor());
-                currentImage.draw(batch);
-            }
-
-            batch.end();
-            frameBuffer.end();
-            batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-            surface.updateTexture(frameBuffer.getColorBufferTexture());
+            renderSurface();
         }
     }
 
+    private void renderSurface() {
+        // Create FBO and set it to the surface
+        frameBuffer.begin();
+        batch.begin();
+        batch.setBlendFunction(-1, -1);
+        Gdx.gl20.glBlendFuncSeparate(GL10.GL_SRC_ALPHA,
+                                     GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_ONE, GL10.GL_ONE);
+        if (nextImage != null && nextImage.isLoaded()) {
+            batch.setColor(nextImage.getColor());
+            nextImage.draw(batch);
+        }
+        if (currentImage != null && currentImage.isLoaded()) {
+            batch.setColor(currentImage.getColor());
+            currentImage.draw(batch);
+        }
+
+        batch.end();
+        frameBuffer.end();
+        batch.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+        surface.updateTexture(frameBuffer.getColorBufferTexture());
+    }
+
     protected void resize(int width, int height) {
-        newFrameBuffer(width, height);
+        Log.i("Screen", "Size : " + Gdx.graphics.getWidth() + " / " + Gdx.graphics.getHeight());
+//        surface.resize(width, height);
+//        newFrameBuffer(width, height);
+//        renderSurface();
     }
 
     public AbstractSurfaceHolder getSurface() {
@@ -200,7 +207,7 @@ public class TransitionRendererInstance {
         free(currentImage);
         free(nextImage);
 
-        surface.onRemove();
+        surface.remove();
 
         BusProvider.getInstance().unregister(imageLoadedSubscriber);
         BusProvider.getInstance().unregister(wallpaperChangeSubscriber);

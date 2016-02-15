@@ -21,7 +21,12 @@ public class MaterialSurfaceHolder extends AbstractSurfaceHolder<Material> {
     }
 
     @Override
-    public void onRemove() {
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void remove() {
 
     }
 }

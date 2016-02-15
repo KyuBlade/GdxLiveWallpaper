@@ -10,7 +10,7 @@ public class ImageSurfaceHolder extends AbstractSurfaceHolder<ImageSurface> {
 
     @Override
     public void updateTexture(Texture texture) {
-        surface.setTexture(texture);
+//        surface.setTexture(texture);
     }
 
     @Override
@@ -19,7 +19,12 @@ public class ImageSurfaceHolder extends AbstractSurfaceHolder<ImageSurface> {
     }
 
     @Override
-    public void onRemove() {
+    public void resize(int width, int height) {
+        surface.resize(width, height);
+    }
+
+    @Override
+    public void remove() {
         surface.remove();
     }
 }

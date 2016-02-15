@@ -18,21 +18,22 @@ public class ImageSurface extends Group {
     protected final ProgressBarIndicator indicator;
     private final TextureRegion region;
     private final TextureRegionDrawable regionDrawable;
-    private final Image image;
+    private final WallpaperImage image;
 
     public ImageSurface(Skin skin) {
         region = new TextureRegion();
         regionDrawable = new TextureRegionDrawable();
+
+        setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        debug();
 
         indicator = new ProgressBarIndicator(skin);
         indicator.setSize(Gdx.graphics.getWidth(), 25f);
         indicator.setPosition(0f, Gdx.graphics.getHeight() - indicator.getHeight() -
                 Utils.getStatusBarHeight());
         indicator.setMaxProgress(1f);
-        indicator.debug();
-        image = new Image();
-        image.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        image.setScaling(Scaling.fill);
+        image = new WallpaperImage();
+//        image.debug();
 
         addActor(image);
         addActor(indicator);
@@ -45,10 +46,14 @@ public class ImageSurface extends Group {
         batch.setColor(Color.WHITE);
     }
 
+    protected void resize(int width, int height) {
+        setSize(width, height);
+    }
+
     protected void setTexture(Texture texture) {
         region.setRegion(texture);
         region.flip(false, true);
         regionDrawable.setRegion(region);
-        image.setDrawable(regionDrawable);
+        image.setTexture(regionDrawable);
     }
 }

@@ -2,8 +2,10 @@ package com.gdx.wallpaper.wallpaper.environment;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.transition.Transition;
@@ -23,13 +25,14 @@ public class SlideEnvironmentRenderer extends Scene2DEnvironmentRenderer {
                                     Transition transition, Skin skin, Batch batch) {
         super(imageManager, tweenManager, transition, skin, batch);
 
+        Actor actor = new Actor();
+        actor.setSize(100f, 100f);
+        actor.setPosition(0f, 0f, Align.center);
+        stage.addActor(actor);
+        actor.debug();
+
         group = new HorizontalGroup();
         stage.addActor(group);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        group.setSize(width, height);
     }
 
     @Override
@@ -53,6 +56,8 @@ public class SlideEnvironmentRenderer extends Scene2DEnvironmentRenderer {
 
         this.screenCount = screenCount;
 
+//        Log.i("Screen,", "" + homeInfo);
+//        Log.i("Screen", "Count : " + homeInfo.getScreenCount());
         group.setX(
                 -(homeInfo.getPercentOffsets().x * (screenCount - 1) * Gdx.graphics.getWidth()) -
                         Gdx.graphics.getWidth() * 0.5f);

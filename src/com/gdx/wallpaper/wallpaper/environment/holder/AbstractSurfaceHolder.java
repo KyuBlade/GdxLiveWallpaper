@@ -20,5 +20,7 @@ public abstract class AbstractSurfaceHolder<T> {
 
     public abstract void updateProgress(float newProgress);
 
-    public abstract void onRemove();
+    public abstract void resize(int width, int height);
+
+    public abstract void remove();
 }

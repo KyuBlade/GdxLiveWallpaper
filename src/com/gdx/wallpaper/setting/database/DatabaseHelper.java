@@ -93,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 .append(PlaylistColumns.TRANSITION_ID).append(" INTEGER NOT NULL DEFAULT -1, ")
                 .append(PlaylistColumns.COLLECTION_ID).append(" INTEGER NOT NULL DEFAULT -1, ")
                 .append(PlaylistColumns.SCROLLABLE).append(" INTEGER NOT NULL DEFAULT 1, ")
-                .append(PlaylistColumns.SCROLL_TYPE).append(" INTEGER NOT NULL DEFAULT 0")
+                .append(PlaylistColumns.SCROLL_TYPE).append(" INTEGER NOT NULL DEFAULT 0, ")
                 .append(PlaylistColumns.ACTIVE).append(" INTEGER NOT NULL DEFAULT 0")
                 .append(')');
         db.execSQL(builder.toString());

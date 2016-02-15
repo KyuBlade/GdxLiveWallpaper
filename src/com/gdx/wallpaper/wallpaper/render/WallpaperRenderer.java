@@ -25,7 +25,6 @@ import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.transition.ManagedImageAccessor;
 import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
-import com.gdx.wallpaper.util.ImageUtil;
 import com.gdx.wallpaper.wallpaper.WallpaperGestureDetector;
 import com.gdx.wallpaper.wallpaper.WallpaperHomeInfo;
 import com.gdx.wallpaper.wallpaper.environment.EnvironmentRenderer;
@@ -140,16 +139,20 @@ public class WallpaperRenderer implements Renderer {
             envRenderer.render(delta);
         }
 
+        uiStage.getViewport().apply();
         uiStage.act(delta);
         uiStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        height -= ImageUtil.getStatusBarHeight();
+//        height -= ImageUtil.getStatusBarHeight();
         uiViewport.update(width, height, true);
 
         homeInfo.setScreenSize(width, height);
+        if (envRenderer != null) {
+            envRenderer.resize(width, height);
+        }
     }
 
     @Override

@@ -14,13 +14,14 @@ public class SurfaceHorizontalGroup extends Group {
     protected void childrenChanged() {
         SnapshotArray<Actor> children = getChildren();
         float width = 0f;
-        float groupHeight = getHeight();
+        float height = 0f;
         for (int i = 0; i < children.size; i++) {
             Actor child = children.get(i);
             child.setX(width);
-            width += child.getWidth();
+            height = Math.max(height, child.getHeight());
         }
 
         setWidth(width);
+        setHeight(height);
     }
 }
