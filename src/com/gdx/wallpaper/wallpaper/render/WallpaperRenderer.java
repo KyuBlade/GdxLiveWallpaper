@@ -22,6 +22,7 @@ import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.environment.EnvironmentManager;
 import com.gdx.wallpaper.environment.renderer.EnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.SlideEnvironmentRenderer;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.image.ManagedImage;
 import com.gdx.wallpaper.playlist.Playlist;
@@ -118,6 +119,9 @@ public class WallpaperRenderer implements Renderer {
             Environment environment = EnvironmentManager.getInstance().get(
                     playlist.getEnvironmentId());
             Transition transition = TransitionManager.getInstance().get(playlist.getTransitionId());
+            envRenderer =
+                    new SlideEnvironmentRenderer(environment, imageManager, tweenManager,
+                                                 transition, batch);
 
             Gdx.input.setInputProcessor(new WallpaperGestureDetector());
         }
