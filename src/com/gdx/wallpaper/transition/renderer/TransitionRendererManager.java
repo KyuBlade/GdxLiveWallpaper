@@ -2,9 +2,10 @@ package com.gdx.wallpaper.transition.renderer;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
+import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.transition.Transition;
-import com.gdx.wallpaper.wallpaper.environment.holder.AbstractSurfaceHolder;
+import com.gdx.wallpaper.environment.holder.AbstractSurfaceHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +19,7 @@ import aurelienribon.tweenengine.TweenManager;
  */
 public class TransitionRendererManager<T extends AbstractSurfaceHolder> {
 
+    protected Environment environment;
     private final ImageManager imageManager;
     protected final TweenManager tweenManager;
     private final Batch batch;
@@ -25,9 +27,10 @@ public class TransitionRendererManager<T extends AbstractSurfaceHolder> {
 
     private Array<TransitionRendererInstance> instances;
 
-    public TransitionRendererManager(ImageManager imageManager,
-                                     TweenManager tweenManager,
-                                     Transition transition, Batch batch) {
+    public TransitionRendererManager(Environment environment, ImageManager imageManager,
+                                     TweenManager tweenManager, Transition transition,
+                                     Batch batch) {
+        this.environment = environment;
         this.imageManager = imageManager;
         this.tweenManager = tweenManager;
         this.batch = batch;

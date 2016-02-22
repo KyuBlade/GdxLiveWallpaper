@@ -6,7 +6,7 @@ import android.widget.ListView;
 
 import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.playlist.PlaylistManager;
-import com.gdx.wallpaper.setting.database.operation.PlaylistActiveUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistActiveUpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistStateChangedEvent;

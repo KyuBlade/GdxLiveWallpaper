@@ -3,7 +3,6 @@ package com.gdx.wallpaper.playlist.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -11,14 +10,15 @@ import android.widget.ListView;
 
 import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.collection.fragment.CollectionListFragment;
+import com.gdx.wallpaper.environment.fragment.EnvironmentListFragment;
 import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.playlist.PlaylistManager;
-import com.gdx.wallpaper.setting.database.operation.PlaylistCollectionUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.PlaylistTransitionUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistCollectionUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistEnvironmentUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistTransitionUpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistChangedEvent;
-import com.gdx.wallpaper.setting.ui.dialog.PlaylistNameEditDialog;
-import com.gdx.wallpaper.setting.ui.dialog.ScrollTypeChoiceDialog;
+import com.gdx.wallpaper.setting.ui.dialog.playlist.PlaylistNameEditDialog;
 import com.gdx.wallpaper.transition.fragment.TransitionListFragment;
 import com.squareup.otto.Subscribe;
 
@@ -30,6 +30,7 @@ public class PlaylistEditFragment extends ListFragment {
 
     public static final int SELECT_TRANSITION_REQUEST_CODE = 0;
     public static final int SELECT_COLLECTION_REQUEST_CODE = 1;
+    public static final int SELECT_ENVIRONMENT_REQUEST_CODE = 2;
 
     private PlaylistEditAdapter adapter;
     private Playlist playlist;
@@ -88,12 +89,13 @@ public class PlaylistEditFragment extends ListFragment {
 
                 break;
 
-            case PlaylistEditAdapter.SCROLL_TYPE:
-                DialogFragment
-                        dialogFragment =
-                        ScrollTypeChoiceDialog
-                                .newInstance(playlist.getId(), playlist.getScrollType().ordinal());
-                dialogFragment.show(getFragmentManager(), TAG);
+            case PlaylistEditAdapter.ENVIRONMENT:
+                fragment = EnvironmentListFragment.newInstance(true);
+                fragment.setTargetFragment(this, SELECT_ENVIRONMENT_REQUEST_CODE);
+                getFragmentManager().beginTransaction().hide(this)
+                        .add(R.id.content_container, fragment, EnvironmentListFragment.TAG)
+                        .addToBackStack(
+                                null).commit();
 
                 break;
         }
@@ -139,6 +141,19 @@ public class PlaylistEditFragment extends ListFragment {
                     BusProvider.getInstance().post(
                             new PlaylistChangedEvent(playlist.getId(),
                                                      new PlaylistCollectionUpdateOperation()));
+                }
+
+                break;
+            case SELECT_ENVIRONMENT_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    getFragmentManager().popBackStack();
+
+                    long id = data.getLongExtra(EnvironmentListFragment.ENVIRONMENT_ID, -1);
+                    playlist.setEnvironmentId(id);
+
+                    BusProvider.getInstance().post(
+                            new PlaylistChangedEvent(playlist.getId(),
+                                                     new PlaylistEnvironmentUpdateOperation()));
                 }
 
                 break;

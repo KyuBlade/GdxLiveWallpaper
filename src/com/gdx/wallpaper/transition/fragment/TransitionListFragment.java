@@ -19,8 +19,8 @@ import com.gdx.wallpaper.setting.eventbus.transition.TransitionChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionCreatedEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionEditEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionRemovedEvent;
-import com.gdx.wallpaper.setting.ui.dialog.TransitionChoiceDialog;
-import com.gdx.wallpaper.setting.ui.dialog.TransitionRemoveDialog;
+import com.gdx.wallpaper.setting.ui.dialog.transition.TransitionTypeChoiceDialog;
+import com.gdx.wallpaper.setting.ui.dialog.transition.TransitionRemoveDialog;
 import com.gdx.wallpaper.transition.Transition;
 import com.squareup.otto.Subscribe;
 
@@ -101,9 +101,9 @@ public class TransitionListFragment extends ListFragment implements Pageable {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.options_menu_add:
-                TransitionChoiceDialog
+                TransitionTypeChoiceDialog
                         .newInstance().show(
-                        getFragmentManager(), TransitionChoiceDialog.TAG);
+                        getFragmentManager(), TransitionTypeChoiceDialog.TAG);
 
                 return true;
 

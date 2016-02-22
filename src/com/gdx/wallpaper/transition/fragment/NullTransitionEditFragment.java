@@ -6,7 +6,7 @@ import android.view.View;
 import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.IntValue;
-import com.gdx.wallpaper.setting.database.operation.TransitionCycleTimeUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.transition.TransitionCycleTimeUpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionChangedEvent;
 import com.gdx.wallpaper.transition.type.NullTransition;
 import com.gdx.wallpaper.setting.ui.SeekerEdit;

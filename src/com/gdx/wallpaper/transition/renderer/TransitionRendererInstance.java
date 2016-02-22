@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.image.ManagedImage;
-import com.gdx.wallpaper.wallpaper.environment.holder.AbstractSurfaceHolder;
+import com.gdx.wallpaper.environment.holder.AbstractSurfaceHolder;
 import com.gdx.wallpaper.wallpaper.eventbus.BusProvider;
 import com.gdx.wallpaper.wallpaper.eventbus.ImageLoadedEvent;
 import com.gdx.wallpaper.wallpaper.eventbus.WallpaperChangeEvent;
@@ -165,8 +165,10 @@ public class TransitionRendererInstance {
                 endCycling();
             }
         } else {
-            renderSurface();
+
         }
+
+        renderSurface();
     }
 
     private void renderSurface() {
@@ -179,6 +181,7 @@ public class TransitionRendererInstance {
         if (nextImage != null && nextImage.isLoaded()) {
             batch.setColor(nextImage.getColor());
             nextImage.draw(batch);
+
         }
         if (currentImage != null && currentImage.isLoaded()) {
             batch.setColor(currentImage.getColor());
@@ -193,10 +196,8 @@ public class TransitionRendererInstance {
     }
 
     protected void resize(int width, int height) {
-        Log.i("Screen", "Size : " + Gdx.graphics.getWidth() + " / " + Gdx.graphics.getHeight());
-//        surface.resize(width, height);
-//        newFrameBuffer(width, height);
-//        renderSurface();
+        surface.resize(width, height);
+        newFrameBuffer(width, height);
     }
 
     public AbstractSurfaceHolder getSurface() {

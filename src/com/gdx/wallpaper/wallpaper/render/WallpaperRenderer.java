@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.android.AndroidLiveWallpaper;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.collection.Collection;
 import com.gdx.wallpaper.collection.CollectionManager;
+import com.gdx.wallpaper.environment.Environment;
+import com.gdx.wallpaper.environment.EnvironmentManager;
+import com.gdx.wallpaper.environment.renderer.EnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.Scene2DEnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.Scene3DEnvironmentRenderer;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.image.ManagedImage;
 import com.gdx.wallpaper.playlist.Playlist;
@@ -27,8 +33,9 @@ import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
 import com.gdx.wallpaper.wallpaper.WallpaperGestureDetector;
 import com.gdx.wallpaper.wallpaper.WallpaperHomeInfo;
-import com.gdx.wallpaper.wallpaper.environment.EnvironmentRenderer;
-import com.gdx.wallpaper.wallpaper.environment.SlideEnvironmentRenderer;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
@@ -42,7 +49,7 @@ public class WallpaperRenderer implements Renderer {
     private final Viewport uiViewport;
     private final Stage uiStage;
 
-    private final EnvironmentRenderer envRenderer;
+    private EnvironmentRenderer envRenderer;
 
     private final Cell<Label> errorMessageCell;
 
@@ -95,6 +102,13 @@ public class WallpaperRenderer implements Renderer {
                 errorStrRes = R.string.collection_wallpaper_unset;
             } else if (collection.size() == 0) {
                 errorStrRes = R.string.collection_wallpaper_empty;
+            } else {
+                Environment
+                        environment =
+                        EnvironmentManager.getInstance().get(playlist.getEnvironmentId());
+                if (environment == null) {
+                    errorStrRes = R.string.environment_wallpaper_empty;
+                }
             }
         }
 
@@ -106,15 +120,52 @@ public class WallpaperRenderer implements Renderer {
             messageLabel.setFontScale(0.25f * Gdx.graphics.getDensity());
             messageLabel.setAlignment(Align.center);
             errorMessageCell.setActor(messageLabel);
-
-            envRenderer = null;
         } else {
-            homeInfo.setScrollingEnabled(playlist.isScrollable());
-
+            Environment environment = EnvironmentManager.getInstance().get(
+                    playlist.getEnvironmentId());
             Transition transition = TransitionManager.getInstance().get(playlist.getTransitionId());
-            envRenderer =
-                    new SlideEnvironmentRenderer(imageManager, tweenManager, transition, skin,
-                                                 batch);
+            Class<? extends EnvironmentRenderer>
+                    envRendererClass =
+                    environment.getType().getRendererClass();
+            try {
+                if (Scene2DEnvironmentRenderer.class.isAssignableFrom(envRendererClass)) {
+                    Constructor
+                            constructor =
+                            envRendererClass.getConstructor(Environment.class, ImageManager.class,
+                                                            TweenManager.class, Transition.class,
+                                                            Skin.class, Batch.class);
+                    envRenderer =
+                            (EnvironmentRenderer) constructor
+                                    .newInstance(environment, imageManager, tweenManager,
+                                                 transition,
+                                                 skin, batch);
+                } else if (Scene3DEnvironmentRenderer.class.isAssignableFrom(envRendererClass)) {
+                    Constructor
+                            constructor =
+                            envRendererClass.getConstructor(Environment.class, ImageManager.class,
+                                                            TweenManager.class,
+                                                            Transition.class, Batch.class);
+                    envRenderer =
+                            (EnvironmentRenderer) constructor
+                                    .newInstance(environment, imageManager, tweenManager,
+                                                 transition, batch);
+                } else {
+                    throw new RuntimeException(
+                            "Environment " + envRendererClass + " was not found");
+                }
+
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+//            envRenderer =
+//                    new SlideEnvironmentRenderer(imageManager, tweenManager, transition, skin,
+//                                                 batch);
 
             Gdx.input.setInputProcessor(new WallpaperGestureDetector());
         }

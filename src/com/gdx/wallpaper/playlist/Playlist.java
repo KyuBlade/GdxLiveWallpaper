@@ -6,21 +6,19 @@ public class Playlist {
     private String name;
     private long transitionId = -1;
     private long collectionId = -1;
-    private boolean scrollable = true;
-    private ScrollType scrollType = ScrollType.NONE;
+    private long environmentId = -1;
     private boolean active;
 
     public Playlist() {
     }
 
-    public Playlist(long id, String name, long transition,
-                    long collection, boolean scrollable, ScrollType scrollType, boolean active) {
+    public Playlist(long id, String name, long transition, long collection, long environment,
+                    boolean active) {
         this.id = id;
         this.name = name;
         this.transitionId = transition;
         this.collectionId = collection;
-        this.scrollable = scrollable;
-        this.scrollType = scrollType;
+        this.environmentId = environment;
         this.active = active;
     }
 
@@ -56,20 +54,12 @@ public class Playlist {
         this.collectionId = collectionId;
     }
 
-    public boolean isScrollable() {
-        return scrollable;
+    public long getEnvironmentId() {
+        return environmentId;
     }
 
-    public void setScrollable(boolean scrollable) {
-        this.scrollable = scrollable;
-    }
-
-    public ScrollType getScrollType() {
-        return scrollType;
-    }
-
-    public void setScrollType(ScrollType scrollType) {
-        this.scrollType = scrollType;
+    public void setEnvironmentId(long environmentId) {
+        this.environmentId = environmentId;
     }
 
     public boolean isActive() {
@@ -84,8 +74,7 @@ public class Playlist {
     public String toString() {
         return new StringBuilder().append("Playlist[id=").append(id).append(", name=").append(name)
                 .append(", transitionId=").append(transitionId).append(", collectionId=")
-                .append(collectionId).append(", scrollable=").append(scrollable)
-                .append(", scrollType=").append(scrollType).append(
+                .append(collectionId).append(", environmentId=").append(environmentId).append(
                         ", active=").append(active).append(
                         ']').toString();
     }

@@ -19,7 +19,7 @@ import com.gdx.wallpaper.setting.Pageable;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionCreatedEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionEditEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionRemovedEvent;
-import com.gdx.wallpaper.setting.ui.dialog.CollectionRemoveDialog;
+import com.gdx.wallpaper.setting.ui.dialog.collection.CollectionRemoveDialog;
 import com.squareup.otto.Subscribe;
 
 public class CollectionListFragment extends ListFragment implements Pageable {

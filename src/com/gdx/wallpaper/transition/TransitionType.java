@@ -11,9 +11,9 @@ import com.gdx.wallpaper.transition.type.FadeTransition;
 import com.gdx.wallpaper.transition.type.NullTransition;
 
 public enum TransitionType {
-    NONE(1, NullTransition.class, R.string.transition_none, NullTransitionEditFragment.class,
+    NONE(1, NullTransition.class, R.string.transition_type_none, NullTransitionEditFragment.class,
          NullTransitionRenderer.class),
-    FADE(2, FadeTransition.class, R.string.transition_fade, FadeTransitionEditFragment.class,
+    FADE(2, FadeTransition.class, R.string.transition_type_fade, FadeTransitionEditFragment.class,
          FadeTransitionRenderer.class);
 
     private int id;

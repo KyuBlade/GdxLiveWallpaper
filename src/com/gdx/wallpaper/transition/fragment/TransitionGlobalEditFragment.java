@@ -8,7 +8,7 @@ import android.widget.ListView;
 import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionChangedEvent;
-import com.gdx.wallpaper.setting.ui.dialog.TransitionNameEditDialog;
+import com.gdx.wallpaper.setting.ui.dialog.transition.TransitionNameEditDialog;
 import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
 import com.squareup.otto.Subscribe;

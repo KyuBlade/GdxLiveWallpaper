@@ -10,8 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 
 import com.gdx.wallpaper.R;
-import com.gdx.wallpaper.setting.database.operation.TransitionDisplayCyclingProgressUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.TransitionRandomUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.transition.TransitionDisplayCyclingProgressUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.transition.TransitionRandomUpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionChangedEvent;
 import com.gdx.wallpaper.setting.ui.CheckableListItem;

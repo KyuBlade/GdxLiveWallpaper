@@ -25,8 +25,8 @@ public class PlaylistFactory {
         contentValues.put(DatabaseHelper.PlaylistColumns.NAME, playlist.getName());
         contentValues.put(DatabaseHelper.PlaylistColumns.TRANSITION_ID, playlist.getTransitionId());
         contentValues.put(DatabaseHelper.PlaylistColumns.COLLECTION_ID, playlist.getCollectionId());
-        contentValues.put(DatabaseHelper.PlaylistColumns.SCROLLABLE, playlist.isScrollable());
-        contentValues.put(DatabaseHelper.PlaylistColumns.SCROLL_TYPE, playlist.getScrollType().ordinal());
+        contentValues
+                .put(DatabaseHelper.PlaylistColumns.ENVIRONMENT_ID, playlist.getEnvironmentId());
         contentValues.put(DatabaseHelper.PlaylistColumns.ACTIVE, playlist.isActive());
 
         SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
@@ -266,20 +266,14 @@ public class PlaylistFactory {
         long collectionId = cursor
                 .getLong(
                         cursor.getColumnIndexOrThrow(DatabaseHelper.PlaylistColumns.COLLECTION_ID));
-        boolean scrollable = cursor
-                .getInt(cursor.getColumnIndexOrThrow(
-                        DatabaseHelper.PlaylistColumns.SCROLLABLE)) != 0;
-        int scrollTypeIndex = cursor.getInt(cursor.getColumnIndexOrThrow(
-                DatabaseHelper.PlaylistColumns.SCROLL_TYPE));
-        ScrollType[] scrollTypes = ScrollType.values();
-        if (scrollTypeIndex > scrollTypes.length - 1 || scrollTypeIndex < 0) {
-            scrollTypeIndex = ScrollType.NONE.ordinal();
-        }
-        ScrollType scrollType = scrollTypes[scrollTypeIndex];
+        long environmentId =
+                cursor.getLong(
+                        cursor.getColumnIndexOrThrow(
+                                DatabaseHelper.PlaylistColumns.ENVIRONMENT_ID));
         boolean active = cursor
                 .getInt(cursor.getColumnIndexOrThrow(
                         DatabaseHelper.PlaylistColumns.ACTIVE)) != 0;
 
-        return new Playlist(id, name, transitionId, collectionId, scrollable, scrollType, active);
+        return new Playlist(id, name, transitionId, collectionId, environmentId, active);
     }
 }

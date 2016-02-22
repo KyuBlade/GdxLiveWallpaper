@@ -10,7 +10,7 @@ import com.gdx.wallpaper.collection.Collection;
 import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionChangedEvent;
-import com.gdx.wallpaper.setting.ui.dialog.CollectionNameEditDialog;
+import com.gdx.wallpaper.setting.ui.dialog.collection.CollectionNameEditDialog;
 import com.squareup.otto.Subscribe;
 
 public class CollectionEditFragment extends ListFragment {

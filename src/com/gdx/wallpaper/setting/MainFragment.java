@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.collection.fragment.CollectionListFragment;
+import com.gdx.wallpaper.environment.fragment.EnvironmentListFragment;
 import com.gdx.wallpaper.playlist.fragment.PlaylistListFragment;
 import com.gdx.wallpaper.transition.fragment.TransitionListFragment;
 
@@ -39,6 +40,7 @@ public class MainFragment extends Fragment {
 
         pages = new ArrayList<Fragment>();
         pages.add(new PlaylistListFragment());
+        pages.add(new EnvironmentListFragment());
         pages.add(new TransitionListFragment());
         pages.add(new CollectionListFragment());
         adapter = new PagerAdapter(getChildFragmentManager(), pages);
@@ -69,7 +71,7 @@ public class MainFragment extends Fragment {
         pager.setAdapter(adapter);
 
         tabs = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabs.setTabMode(TabLayout.MODE_FIXED);
+        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         return rootView;
     }
@@ -81,18 +83,6 @@ public class MainFragment extends Fragment {
         if (pager != null) {
             outState.putInt(POSITION, pager.getCurrentItem());
         }
-    }
-
-    public PlaylistListFragment getPlaylistPage() {
-        return (PlaylistListFragment) adapter.getItem(0);
-    }
-
-    public TransitionListFragment getTransitionPage() {
-        return (TransitionListFragment) adapter.getItem(1);
-    }
-
-    public CollectionListFragment getCollectionPage() {
-        return (CollectionListFragment) adapter.getItem(2);
     }
 
     public class PagerAdapter extends FragmentPagerAdapter {

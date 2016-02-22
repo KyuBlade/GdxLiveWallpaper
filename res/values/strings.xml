@@ -34,12 +34,6 @@
     <string name="playlist_edit_name">Name</string>
     <string name="playlist_wallpaper_unset">"No playlist set.\n Create a new playlist in the live wallpaper settings."</string>
 
-    <!-- Scrolling -->
-    <string name="playlist_scrollable">Scrolling on home</string>
-    <string name="playlist_scroll_type">Scroll type</string>
-    <string name="playlist_scroll_type_none">None</string>
-    <string name="playlist_scroll_type_slide">Slide</string>
-    <string name="playlist_scroll_type_cube">Cube</string>
 
     <!-- Transition -->
     <string name="transition">Transition</string>
@@ -51,8 +45,8 @@
     <string name="transition_cycling_progress_description"></string>
     <string name="transition_edit_manage_title">Manage</string>
     <string name="transition_edit_manage_description">Setting the transitionId</string>
-    <string name="transition_none">None</string>
-    <string name="transition_fade">Fade</string>
+    <string name="transition_type_none">None</string>
+    <string name="transition_type_fade">Fade</string>
     <string name="transition_time_fade">Fade time</string>
     <string name="transition_time_cycle">Cycle time</string>
     <string name="transition_remove_deactivate">The transitionId was used by the current playlist. Playlist deactivated.</string>
@@ -68,14 +62,26 @@
     <string name="collection_wallpaper_empty">"Your collection contains no images."</string>
     <string name="collection_entries_empty">No images available in the collection.</string>
 
+    <!-- Environment -->
+    <string name="environment">Environment</string>
+    <string name="environment_page_name">Environments</string>
+    <string name="environment_empty">No environments currently created.</string>
+    <string name="environment_type_none">None</string>
+    <string name="environment_type_slide">Slide</string>
+    <string name="environment_type_cube">Cube</string>
+    <string name="environment_wallpaper_empty">"No environment defined."</string>
+    <string name="environment_edit_screen_count_title">Home screen count</string>
+    <string name="environment_edit_screen_count_message">Number of screen on the home</string>
+
     <!-- Dialog -->
     <string name="dialog_remove_title">Remove confirmation</string>
     <string name="dialog_remove_playlist_message">Are you sure you want to remove this playlist ?</string>
+    <string name="dialog_remove_environment_message">Are you sure you want to remove this environment ?</string>
     <string name="dialog_remove_transition_message">Are you sure you want to remove this transition ?</string>
     <string name="dialog_remove_collection_message">Are you sure you want to remove this collection ?</string>
     <string name="dialog_playlist_edit_name_title">Playlist name</string>
     <string name="dialog_playlist_edit_name_message">Enter the playlist name</string>
-    <string name="dialog_playlist_edit_transition_title">Choose a transition</string>
+    <string name="dialog_edit_transition_title">Choose a transition</string>
     <string name="dialog_playlist_edit_scroll_title">Choose a scroll type</string>
     <string name="dialog_transition_edit_name_title">Transition name</string>
     <string name="dialog_transition_edit_name_message">Enter the transition name</string>
@@ -83,6 +89,10 @@
     <string name="dialog_collection_edit_name_message">Enter the collection name</string>
     <string name="dialog_playlist_edit_name_empty_title">Empty name</string>
     <string name="dialog_playlist_edit_name_empty_message">The playlist name is empty, the playlist will not be saved !</string>
+    <string name="dialog_environment_edit_name_title">Environment name</string>
+    <string name="dialog_environment_edit_name_message">Enter the environment name</string>
+    <string name="dialog_edit_environment_type_title">Choose an environment</string>
+    <string name="dialog_edit_environment_screen_count_title">How many screens do you have on your home ?</string>
     <string name="dialog_wallpaper_image_edit_help_title">Help</string>
     <string name="dialog_wallpaper_image_edit_help_message">Help dialog </string>
 

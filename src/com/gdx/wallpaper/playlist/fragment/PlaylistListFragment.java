@@ -20,7 +20,7 @@ import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistEditEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistRemoveEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistStateChangedEvent;
 import com.gdx.wallpaper.setting.ui.RadioButton;
-import com.gdx.wallpaper.setting.ui.dialog.PlaylistRemoveDialog;
+import com.gdx.wallpaper.setting.ui.dialog.playlist.PlaylistRemoveDialog;
 import com.squareup.otto.Subscribe;
 
 public class PlaylistListFragment extends ListFragment implements Pageable {

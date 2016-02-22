@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class WallpaperHomeInfo {
 
-    private boolean scrollingEnabled;
     private boolean landscape;
     private boolean preview;
     private Vector2 screenSize;
@@ -70,14 +69,6 @@ public class WallpaperHomeInfo {
     public void setStepOffsets(float x, float y) {
         stepOffsets.x = x;
         stepOffsets.y = y;
-    }
-
-    public boolean isScrollingEnabled() {
-        return scrollingEnabled;
-    }
-
-    public void setScrollingEnabled(boolean scrollingEnabled) {
-        this.scrollingEnabled = scrollingEnabled;
     }
 
     public boolean isLandscape() {

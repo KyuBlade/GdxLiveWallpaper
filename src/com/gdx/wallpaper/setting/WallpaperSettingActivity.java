@@ -13,14 +13,17 @@ import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.collection.entry.Entry;
 import com.gdx.wallpaper.collection.entry.EntryFactory;
 import com.gdx.wallpaper.collection.fragment.CollectionEditFragment;
+import com.gdx.wallpaper.environment.Environment;
+import com.gdx.wallpaper.environment.EnvironmentManager;
+import com.gdx.wallpaper.environment.fragment.EnvironmentEditFragment;
 import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.playlist.PlaylistManager;
 import com.gdx.wallpaper.playlist.fragment.PlaylistEditFragment;
 import com.gdx.wallpaper.setting.database.DatabaseHelper;
-import com.gdx.wallpaper.setting.database.operation.PlaylistActiveUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.PlaylistCollectionUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.PlaylistNameUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.PlaylistTransitionUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistActiveUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistCollectionUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistNameUpdateOperation;
+import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistTransitionUpdateOperation;
 import com.gdx.wallpaper.setting.database.operation.UpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionChangedEvent;
@@ -29,6 +32,10 @@ import com.gdx.wallpaper.setting.eventbus.collection.CollectionEditEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionEntryChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionRemovedEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.EntriesInsertedEvent;
+import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentChangedEvent;
+import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentCreatedEvent;
+import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentEditEvent;
+import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentRemoveEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistCreatedEvent;
 import com.gdx.wallpaper.setting.eventbus.playlist.PlaylistEditEvent;
@@ -44,8 +51,6 @@ import com.gdx.wallpaper.wallpaper.UpdateReceiver;
 import com.squareup.otto.Subscribe;
 
 public class WallpaperSettingActivity extends AppCompatActivity {
-
-    private EntryFactory entryFactory;
 
     private MainFragment mainFragment;
 
@@ -64,8 +69,6 @@ public class WallpaperSettingActivity extends AppCompatActivity {
         setContentView(R.layout.content);
 
         if (savedInstanceState == null) {
-            entryFactory = EntryFactory.getInstance();
-
             mainFragment = new MainFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_container, mainFragment, MainFragment.TAG).commit();
@@ -128,6 +131,41 @@ public class WallpaperSettingActivity extends AppCompatActivity {
         if (PlaylistManager.getInstance().isActive(event.getId())) {
             updateWallpaperService();
         }
+    }
+
+    @Subscribe
+    public void changeEnvironment(EnvironmentChangedEvent event) {
+        long environmentId = event.getEnvironmentId();
+        UpdateOperation updateOperation = event.getUpdateOperation();
+        Environment environment = EnvironmentManager.getInstance().get(environmentId);
+        EnvironmentManager.getInstance().update(environment, updateOperation);
+        if (!(updateOperation instanceof PlaylistNameUpdateOperation)) {
+            updateWallpaperService();
+        }
+    }
+
+    @Subscribe
+    public void editEnvironment(EnvironmentEditEvent event) {
+        long environmentId = event.getEnvironmentId();
+        if (environmentId == -1) {
+            Environment environment = new Environment();
+            EnvironmentManager.getInstance().insert(environment);
+            environmentId = environment.getId();
+
+            BusProvider.getInstance().post(new EnvironmentCreatedEvent());
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_container,
+                                                               EnvironmentEditFragment.newInstance(
+                                                                       environmentId))
+                .addToBackStack(null).commit();
+    }
+
+    @Subscribe
+    public void removeEnvironment(EnvironmentRemoveEvent event) {
+        EnvironmentManager.getInstance().remove(event.getId());
+
+        updateWallpaperService();
     }
 
     @Subscribe
@@ -267,7 +305,7 @@ public class WallpaperSettingActivity extends AppCompatActivity {
             entry.setImagePath(path);
             entries[i] = entry;
         }
-        entryFactory.insert(entries);
+        EntryFactory.getInstance().insert(entries);
         collection.addAll(entries);
 
         updateWallpaperService();
