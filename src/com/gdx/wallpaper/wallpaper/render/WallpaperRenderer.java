@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.android.AndroidLiveWallpaper;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,8 +22,6 @@ import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.environment.EnvironmentManager;
 import com.gdx.wallpaper.environment.renderer.EnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.Scene2DEnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.Scene3DEnvironmentRenderer;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.image.ManagedImage;
 import com.gdx.wallpaper.playlist.Playlist;
@@ -33,9 +30,6 @@ import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
 import com.gdx.wallpaper.wallpaper.WallpaperGestureDetector;
 import com.gdx.wallpaper.wallpaper.WallpaperHomeInfo;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
@@ -124,48 +118,6 @@ public class WallpaperRenderer implements Renderer {
             Environment environment = EnvironmentManager.getInstance().get(
                     playlist.getEnvironmentId());
             Transition transition = TransitionManager.getInstance().get(playlist.getTransitionId());
-            Class<? extends EnvironmentRenderer>
-                    envRendererClass =
-                    environment.getType().getRendererClass();
-            try {
-                if (Scene2DEnvironmentRenderer.class.isAssignableFrom(envRendererClass)) {
-                    Constructor
-                            constructor =
-                            envRendererClass.getConstructor(Environment.class, ImageManager.class,
-                                                            TweenManager.class, Transition.class,
-                                                            Skin.class, Batch.class);
-                    envRenderer =
-                            (EnvironmentRenderer) constructor
-                                    .newInstance(environment, imageManager, tweenManager,
-                                                 transition,
-                                                 skin, batch);
-                } else if (Scene3DEnvironmentRenderer.class.isAssignableFrom(envRendererClass)) {
-                    Constructor
-                            constructor =
-                            envRendererClass.getConstructor(Environment.class, ImageManager.class,
-                                                            TweenManager.class,
-                                                            Transition.class, Batch.class);
-                    envRenderer =
-                            (EnvironmentRenderer) constructor
-                                    .newInstance(environment, imageManager, tweenManager,
-                                                 transition, batch);
-                } else {
-                    throw new RuntimeException(
-                            "Environment " + envRendererClass + " was not found");
-                }
-
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-//            envRenderer =
-//                    new SlideEnvironmentRenderer(imageManager, tweenManager, transition, skin,
-//                                                 batch);
 
             Gdx.input.setInputProcessor(new WallpaperGestureDetector());
         }

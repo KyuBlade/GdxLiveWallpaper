@@ -1,10 +1,7 @@
 package com.gdx.wallpaper.environment;
 
 import com.gdx.wallpaper.R;
-import com.gdx.wallpaper.environment.renderer.CubeEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.EnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.NullEnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.SlideEnvironmentRenderer;
 
 public enum EnvironmentType {
     NONE(R.string.environment_type_none, NullEnvironmentRenderer.class),
