@@ -28,4 +28,36 @@ public class Utils {
         }
         return result;
     }
+
+    public static String formatTimestamp(final long timestamp) {
+        long localTimestamp = timestamp;
+        long msPerSec = 1000L;
+        long msPerMin = msPerSec * 60L;
+        long msPerHour = msPerMin * 60L;
+        long msPerDay = msPerHour * 24;
+
+        long days = localTimestamp / msPerDay;
+        localTimestamp = localTimestamp - msPerDay * days;
+
+        long hours = localTimestamp / msPerHour;
+        localTimestamp = localTimestamp - msPerHour * hours;
+
+        long minutes = localTimestamp / msPerMin;
+        localTimestamp = localTimestamp - msPerMin * minutes;
+
+        long seconds = localTimestamp / msPerSec;
+        localTimestamp = localTimestamp - msPerSec * seconds;
+
+        long milliseconds = localTimestamp;
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(days).append("d ").append(hours).append("h ").append(minutes).append("m ")
+                .append(seconds).append("s ").append(milliseconds).append("ms");
+
+        return builder.toString();
+    }
+
+    public static boolean isLandscape() {
+        return Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+    }
 }

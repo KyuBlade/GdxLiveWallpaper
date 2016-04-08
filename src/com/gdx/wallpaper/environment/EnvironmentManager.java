@@ -26,6 +26,10 @@ public class EnvironmentManager {
         factory.update(id, updateOperation);
     }
 
+    public void update(Environment environment, String columnName, Object value) {
+        factory.update(environment, columnName, value);
+    }
+
     public void remove(Environment environment) {
         factory.delete(environment);
     }

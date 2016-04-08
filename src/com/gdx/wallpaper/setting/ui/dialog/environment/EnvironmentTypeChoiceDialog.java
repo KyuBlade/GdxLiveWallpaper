@@ -8,12 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.gdx.wallpaper.R;
-import com.gdx.wallpaper.environment.Environment;
-import com.gdx.wallpaper.environment.EnvironmentManager;
 import com.gdx.wallpaper.environment.EnvironmentType;
-import com.gdx.wallpaper.setting.database.operation.environment.EnvironmentTypeUpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
-import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentChangedEvent;
+import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentCreatedEvent;
 
 public class EnvironmentTypeChoiceDialog extends DialogFragment {
 
@@ -29,13 +26,8 @@ public class EnvironmentTypeChoiceDialog extends DialogFragment {
         items = EnvironmentType.values();
     }
 
-    public static EnvironmentTypeChoiceDialog newInstance(long environmentId,
-                                                          EnvironmentType defaultValue) {
+    public static EnvironmentTypeChoiceDialog newInstance() {
         EnvironmentTypeChoiceDialog fragment = new EnvironmentTypeChoiceDialog();
-        Bundle bundle = new Bundle();
-        bundle.putLong(ENVIRONMENT_ID, environmentId);
-        bundle.putInt(DEFAULT_VALUE, defaultValue.ordinal());
-        fragment.setArguments(bundle);
 
         return fragment;
     }
@@ -47,10 +39,6 @@ public class EnvironmentTypeChoiceDialog extends DialogFragment {
         for (int i = 0; i < names.length; i++) {
             names[i] = getActivity().getString(items[i].getNameRes());
         }
-
-        Bundle args = getArguments();
-        final long environmentId = args.getLong(ENVIRONMENT_ID);
-        selectedIndex = args.getInt(DEFAULT_VALUE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_edit_environment_type_title)
@@ -66,11 +54,7 @@ public class EnvironmentTypeChoiceDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 EnvironmentType type = items[selectedIndex];
                 dialog.dismiss();
-
-                Environment environment = EnvironmentManager.getInstance().get(environmentId);
-                environment.setType(type);
-                BusProvider.getInstance().post(new EnvironmentChangedEvent(environmentId,
-                                                                           new EnvironmentTypeUpdateOperation()));
+                BusProvider.getInstance().post(new EnvironmentCreatedEvent(type));
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

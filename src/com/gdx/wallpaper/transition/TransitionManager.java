@@ -26,6 +26,10 @@ public class TransitionManager {
         factory.update(id, updateOperation);
     }
 
+    public void update(Transition transition, String columnName, Object value) {
+        factory.update(transition, columnName, value);
+    }
+
     public void remove(Transition transition) {
         factory.delete(transition);
     }

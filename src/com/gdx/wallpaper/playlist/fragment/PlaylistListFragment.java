@@ -2,6 +2,8 @@ package com.gdx.wallpaper.playlist.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +39,7 @@ public class PlaylistListFragment extends ListFragment implements Pageable {
         super.onCreate(savedInstanceState);
 
         adapter = new PlaylistAdapter(getActivity(), this);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -45,7 +48,6 @@ public class PlaylistListFragment extends ListFragment implements Pageable {
 
         setListAdapter(adapter);
         setEmptyText(getString(R.string.playlist_empty));
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -54,6 +56,11 @@ public class PlaylistListFragment extends ListFragment implements Pageable {
 
         registerForContextMenu(getListView());
         BusProvider.getInstance().register(this);
+
+        AppCompatActivity activity = ((AppCompatActivity) getActivity());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.show();
+        activity.supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -101,8 +108,10 @@ public class PlaylistListFragment extends ListFragment implements Pageable {
 
         switch (item.getItemId()) {
             case R.id.floating_menu_edit:
-                AdapterView.AdapterContextMenuInfo listItem = (AdapterView.AdapterContextMenuInfo) item
-                        .getMenuInfo();
+                AdapterView.AdapterContextMenuInfo
+                        listItem =
+                        (AdapterView.AdapterContextMenuInfo) item
+                                .getMenuInfo();
                 PlaylistAdapter adapter = (PlaylistAdapter) getListAdapter();
                 Playlist playlist = adapter.getItem(listItem.position);
                 BusProvider.getInstance().post(new PlaylistEditEvent(playlist.getId()));

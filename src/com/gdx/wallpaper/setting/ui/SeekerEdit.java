@@ -1,18 +1,21 @@
 package com.gdx.wallpaper.setting.ui;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.gdx.wallpaper.R;
 
 public class SeekerEdit extends RelativeLayout {
@@ -22,88 +25,112 @@ public class SeekerEdit extends RelativeLayout {
         void onChange(int newValue);
     }
 
-    private TextView title;
     private SeekBar seekbar;
     private EditText valueEdit;
 
-    private int maxValue;
-    private int value;
+    private float minValue;
+    private float maxValue;
+    private float value;
 
-    private ChangeListener listener;
+    private OnSeekerChangeListener listener;
 
     public SeekerEdit(Context context) {
-        this(context, null, 0);
+        super(context, null, 0);
+
+        init(context, null, 0);
     }
 
     public SeekerEdit(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs, 0);
+
+        init(context, attrs, 0);
     }
 
-    public SeekerEdit(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public SeekerEdit(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
 
-        TypedArray _a = context.obtainStyledAttributes(attrs, R.styleable.SeekerEdit, defStyle, 0);
+        init(context, attrs, defStyleAttr);
+    }
 
-        String _title = null;
-        int _defaultValue;
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public SeekerEdit(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+
+        init(context, attrs, defStyleAttr);
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeekerEdit, defStyle, 0);
+
         try {
-            _title = _a.getString(R.styleable.SeekerEdit_editTitle);
-            _defaultValue = _a.getInt(R.styleable.SeekerEdit_defaultValue, 0);
-            maxValue = _a.getInt(R.styleable.SeekerEdit_maxValue, 0);
+            value = a.getFloat(R.styleable.SeekerEdit_defaultValue, 0);
+            maxValue = a.getFloat(R.styleable.SeekerEdit_minValue, 0);
+            maxValue = a.getFloat(R.styleable.SeekerEdit_maxValue, 0);
         } finally {
-            _a.recycle();
+            a.recycle();
         }
 
-        LayoutInflater _inflater = LayoutInflater.from(context);
-        _inflater.inflate(R.layout.seeker_edit, this);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.seeker_edit_impl, this);
 
-        title = (TextView) findViewById(R.id.title);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
         valueEdit = (EditText) findViewById(R.id.editText);
 
-        title.setText(_title);
+        setMinValue(minValue);
         setMaxValue(maxValue);
-        setValue(_defaultValue);
+        setValue(value);
 
         seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (listener != null) {
-                    listener.onChange(value);
+                    listener.onStopTrackingTouch(SeekerEdit.this);
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                if (listener != null) {
+                    listener.onStartTrackingTouch(SeekerEdit.this);
+                }
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                value = progress;
-
                 if (fromUser) {
-                    valueEdit.setText(String.valueOf(progress));
+                    value =
+                            Math.round(
+                                    ((((float) progress / 100f)) * (maxValue - minValue) +
+                                            minValue) *
+                                            100.0f) / 100.0f;
+                    value = MathUtils.clamp(value, minValue, maxValue);
+                    valueEdit.setText(String.valueOf(value));
+                }
+
+                if (listener != null) {
+                    listener.onProgressChanged(SeekerEdit.this, value, fromUser);
                 }
             }
         });
 
-        valueEdit.setOnEditorActionListener(new OnEditorActionListener() {
+        valueEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    value = Integer.valueOf(v.getText().toString());
-                    if (value > maxValue) {
-                        value = maxValue;
-
-                        v.setText(String.valueOf(value));
+                    try {
+                        value = Float.valueOf(v.getText().toString());
+                    } catch (NumberFormatException e) {
+                        value = 0;
                     }
-                    seekbar.setProgress(value);
-
-                    if (listener != null) {
-                        listener.onChange(value);
-                    }
+                    setValue(value);
+                    v.clearFocus();
+                    InputMethodManager imm =
+                            (InputMethodManager) v.getContext()
+                                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    return true;
                 }
 
                 return false;
@@ -111,28 +138,43 @@ public class SeekerEdit extends RelativeLayout {
         });
     }
 
-    public int getMaxValue() {
+    public float getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(float minValue) {
+        this.minValue = minValue;
+    }
+
+    public float getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(int maxValue) {
+    public void setMaxValue(float maxValue) {
         this.maxValue = maxValue;
-
-        seekbar.setMax(maxValue);
     }
 
-    public int getValue() {
+    public float getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-
-        seekbar.setProgress(value);
+    public void setValue(float value) {
+        value = MathUtils.clamp(value, minValue, maxValue);
+        int intValue = (int) (((value - minValue) / (maxValue - minValue)) * 100);
+        seekbar.setProgress(intValue);
         valueEdit.setText(String.valueOf(value));
     }
 
-    public void setChangeListener(ChangeListener listener) {
+    public void setListener(OnSeekerChangeListener listener) {
         this.listener = listener;
+    }
+
+    public interface OnSeekerChangeListener {
+
+        void onStopTrackingTouch(SeekerEdit seekerEdit);
+
+        void onStartTrackingTouch(SeekerEdit seekerEdit);
+
+        void onProgressChanged(SeekerEdit seekerEdit, float progress, boolean fromUser);
     }
 }

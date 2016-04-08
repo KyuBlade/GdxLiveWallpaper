@@ -60,16 +60,15 @@ public class ImageManager implements Disposable {
         return managedImage;
     }
 
-    private void loadImage(Entry entry, final ManagedImage managedImage) {
+    private void loadImage(final Entry entry, final ManagedImage managedImage) {
         managedImage.setState(ManagedImage.State.LOADING);
-        managedImage.setup(entry);
         LoadedCallback callback = new LoadedCallback() {
 
             @Override
             public void finishedLoading(AssetManager assetManager, String fileName,
                                         Class type) {
                 Texture texture = assetManager.get(fileName, Texture.class);
-                managedImage.setTexture(texture);
+                managedImage.setup(entry, texture);
                 managedImage.setState(ManagedImage.State.LOADED);
 
                 BusProvider.getInstance().post(new ImageLoadedEvent(managedImage));

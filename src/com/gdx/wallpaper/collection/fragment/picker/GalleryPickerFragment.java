@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.widget.CursorAdapter;
 
 import com.gdx.wallpaper.R;
-import com.gdx.wallpaper.setting.ui.GalleryFragment;
+import com.gdx.wallpaper.collection.fragment.gallery.GalleryFragment;
 import com.gdx.wallpaper.util.PermissionUtils;
 
 public abstract class GalleryPickerFragment

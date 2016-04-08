@@ -19,7 +19,8 @@ public class TransitionFactory {
     }
 
     protected void insert(Transition transition) {
-        transition.provideInsert(contentValues);
+        contentValues.clear();
+        transition.provideInsertInternal(contentValues);
 
         SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
         try {
@@ -27,7 +28,6 @@ public class TransitionFactory {
             long rowId = database.insertOrThrow(DatabaseHelper.TRANSITION_TABLE, null,
                                                 contentValues);
             transition.setId(rowId);
-            contentValues.clear();
             database.setTransactionSuccessful();
 
             cache.put(transition);
@@ -39,6 +39,7 @@ public class TransitionFactory {
     }
 
     protected void update(Transition transition, UpdateOperation<Transition> updateOperation) {
+        contentValues.clear();
         updateOperation.provide(transition, contentValues);
 
         SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
@@ -47,7 +48,6 @@ public class TransitionFactory {
             database.update(DatabaseHelper.TRANSITION_TABLE, contentValues,
                             DatabaseHelper.CommonColumns.ID + " = ?",
                             new String[] { String.valueOf(transition.getId()) });
-            contentValues.clear();
             database.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,6 +58,23 @@ public class TransitionFactory {
 
     protected void update(long id, UpdateOperation<Transition> updateOperation) {
         update(get(id), updateOperation);
+    }
+
+    public void update(Transition transition, String columnName, Object value) {
+        contentValues.clear();
+        addAbsToContentValues(contentValues, columnName, value);
+        SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
+        try {
+            database.beginTransaction();
+            database.update(DatabaseHelper.TRANSITION_TABLE, contentValues,
+                            DatabaseHelper.CommonColumns.ID + " = ?",
+                            new String[] { String.valueOf(transition.getId()) });
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            database.endTransaction();
+        }
     }
 
     protected void delete(Transition transition) {
@@ -123,7 +140,7 @@ public class TransitionFactory {
                     if (transition == null) {
                         int type = cursor
                                 .getInt(cursor.getColumnIndexOrThrow(TransitionColumns.TYPE));
-                        TransitionType enumType = TransitionType.getFor(type);
+                        TransitionType enumType = TransitionType.values()[type];
                         try {
                             transition = enumType.getTransitionClass().newInstance();
                             transition.buildInternal(cursor);
@@ -167,7 +184,7 @@ public class TransitionFactory {
                 for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
                     int type = result
                             .getInt(result.getColumnIndexOrThrow(TransitionColumns.TYPE));
-                    TransitionType enumType = TransitionType.getFor(type);
+                    TransitionType enumType = TransitionType.values()[type];
 
                     try {
                         transition = enumType.getTransitionClass().newInstance();
@@ -189,5 +206,19 @@ public class TransitionFactory {
         }
 
         return null;
+    }
+
+    private void addAbsToContentValues(ContentValues values, String columnName, Object value) {
+        if (value instanceof Integer) {
+            values.put(columnName, (int) value);
+        } else if (value instanceof Float) {
+            values.put(columnName, (float) value);
+        } else if (value instanceof String) {
+            values.put(columnName, (String) value);
+        } else if (value instanceof Double) {
+            values.put(columnName, (double) value);
+        } else if (value instanceof Long) {
+            values.put(columnName, (long) value);
+        }
     }
 }

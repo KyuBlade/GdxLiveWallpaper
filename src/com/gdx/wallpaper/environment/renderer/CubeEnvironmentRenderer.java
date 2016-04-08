@@ -1,19 +1,15 @@
 package com.gdx.wallpaper.environment.renderer;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.gdx.wallpaper.environment.Environment;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.gdx.wallpaper.environment.type.CubeEnvironment;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.transition.Transition;
 
-import aurelienribon.tweenengine.TweenManager;
+public class CubeEnvironmentRenderer extends AbstractEnvironmentRenderer<CubeEnvironment> {
 
-public class CubeEnvironmentRenderer extends EnvironmentRenderer {
-
-    public CubeEnvironmentRenderer(Environment environment,
-                                   ImageManager imageManager,
-                                   TweenManager tweenManager,
-                                   Transition transition,
-                                   Batch batch, String shader) {
-        super(environment, imageManager, tweenManager, transition, batch, shader);
+    public CubeEnvironmentRenderer(CubeEnvironment environment, ImageManager imageManager,
+                                   Transition transition, Batch batch, Skin skin) {
+        super(environment, imageManager, transition, batch, skin);
     }
 }

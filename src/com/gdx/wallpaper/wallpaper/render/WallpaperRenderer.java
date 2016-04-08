@@ -1,11 +1,13 @@
 package com.gdx.wallpaper.wallpaper.render;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.android.AndroidLiveWallpaper;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,30 +23,26 @@ import com.gdx.wallpaper.collection.Collection;
 import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.environment.EnvironmentManager;
-import com.gdx.wallpaper.environment.renderer.EnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.SlideEnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.AbstractEnvironmentRenderer;
 import com.gdx.wallpaper.image.ImageManager;
-import com.gdx.wallpaper.image.ManagedImage;
 import com.gdx.wallpaper.playlist.Playlist;
-import com.gdx.wallpaper.transition.ManagedImageAccessor;
 import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
 import com.gdx.wallpaper.wallpaper.WallpaperGestureDetector;
 import com.gdx.wallpaper.wallpaper.WallpaperHomeInfo;
 
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class WallpaperRenderer implements Renderer {
 
     private final ImageManager imageManager;
-    private final TweenManager tweenManager;
     private final AssetManager assetManager;
 
     private final Viewport uiViewport;
     private final Stage uiStage;
 
-    private EnvironmentRenderer envRenderer;
+    private AbstractEnvironmentRenderer envRenderer;
 
     private final Cell<Label> errorMessageCell;
 
@@ -66,9 +64,6 @@ public class WallpaperRenderer implements Renderer {
 
         imageManager = new ImageManager();
         imageManager.setPlaylist(playlist);
-
-        tweenManager = new TweenManager();
-        Tween.registerAccessor(ManagedImage.class, new ManagedImageAccessor());
 
         debugRenderer = new ShapeRenderer();
 
@@ -119,9 +114,24 @@ public class WallpaperRenderer implements Renderer {
             Environment environment = EnvironmentManager.getInstance().get(
                     playlist.getEnvironmentId());
             Transition transition = TransitionManager.getInstance().get(playlist.getTransitionId());
-            envRenderer =
-                    new SlideEnvironmentRenderer(environment, imageManager, tweenManager,
-                                                 transition, batch);
+            Class<? extends AbstractEnvironmentRenderer> envClazz =
+                    environment.getType().getRendererClass();
+            try {
+                Constructor<? extends AbstractEnvironmentRenderer>
+                        constructor =
+                        envClazz.getConstructor(environment.getClass(), ImageManager.class,
+                                                Transition.class, Batch.class, Skin.class);
+                envRenderer = constructor
+                        .newInstance(environment, imageManager, transition, batch, skin);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
 
             Gdx.input.setInputProcessor(new WallpaperGestureDetector());
         }
@@ -140,7 +150,6 @@ public class WallpaperRenderer implements Renderer {
     @Override
     public void update(float delta) {
         imageManager.update();
-        tweenManager.update(delta);
 
         if (envRenderer != null) {
             envRenderer.render(delta);
@@ -153,7 +162,7 @@ public class WallpaperRenderer implements Renderer {
 
     @Override
     public void resize(int width, int height) {
-//        height -= ImageUtil.getStatusBarHeight();
+        Log.i("Resize", "Size : " + width + "x" + height);
         uiViewport.update(width, height, true);
 
         homeInfo.setScreenSize(width, height);
@@ -180,6 +189,7 @@ public class WallpaperRenderer implements Renderer {
         if (uiStage != null) {
             uiStage.dispose();
         }
+        debugRenderer.dispose();
     }
 
     @Override

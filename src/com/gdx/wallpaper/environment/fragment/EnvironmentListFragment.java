@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,7 @@ import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentCreatedEvent;
 import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentEditEvent;
 import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentRemoveEvent;
 import com.gdx.wallpaper.setting.ui.dialog.environment.EnvironmentRemoveDialog;
+import com.gdx.wallpaper.setting.ui.dialog.environment.EnvironmentTypeChoiceDialog;
 import com.squareup.otto.Subscribe;
 
 public class EnvironmentListFragment extends ListFragment implements Pageable {
@@ -73,6 +76,11 @@ public class EnvironmentListFragment extends ListFragment implements Pageable {
 
         registerForContextMenu(getListView());
         BusProvider.getInstance().register(this);
+
+        AppCompatActivity activity = ((AppCompatActivity) getActivity());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.show();
+        activity.supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -103,7 +111,7 @@ public class EnvironmentListFragment extends ListFragment implements Pageable {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.options_menu_add:
-                BusProvider.getInstance().post(new EnvironmentEditEvent(-1));
+                EnvironmentTypeChoiceDialog.newInstance().show(getFragmentManager(), TAG);
 
                 return true;
 

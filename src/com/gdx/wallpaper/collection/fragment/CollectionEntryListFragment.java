@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -23,7 +25,7 @@ import com.gdx.wallpaper.collection.fragment.picker.AlbumPickerFragment;
 import com.gdx.wallpaper.image.fragment.CollectionEntryEditFragment;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.collection.EntriesInsertedEvent;
-import com.gdx.wallpaper.setting.ui.GalleryFragment;
+import com.gdx.wallpaper.collection.fragment.gallery.GalleryFragment;
 
 public class CollectionEntryListFragment extends GalleryFragment {
 
@@ -64,6 +66,16 @@ public class CollectionEntryListFragment extends GalleryFragment {
         super.onViewCreated(view, savedInstanceState);
 
         setEmptyText(R.string.collection_entries_empty);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AppCompatActivity activity = ((AppCompatActivity) getActivity());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.show();
+        activity.supportInvalidateOptionsMenu();
     }
 
     @Override

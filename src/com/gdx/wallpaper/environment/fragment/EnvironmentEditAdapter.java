@@ -15,6 +15,7 @@ public class EnvironmentEditAdapter extends BaseAdapter {
     public static final int NAME = 0;
     public static final int TYPE = 1;
     public static final int SCREEN_COUNT = 2;
+    public static final int MANAGE = 3;
 
     private LayoutInflater inflater;
     private Environment environment;
@@ -27,7 +28,7 @@ public class EnvironmentEditAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -70,6 +71,16 @@ public class EnvironmentEditAdapter extends BaseAdapter {
                             inflater.inflate(R.layout.environment_edit_screen_count_item, parent,
                                              false);
                 }
+                break;
+
+            case MANAGE:
+                if (convertView == null) {
+                    convertView = inflater.inflate(R.layout.environment_list_item, parent, false);
+                }
+
+                listItem = (TwoLineListItem) convertView;
+                listItem.setText1(R.string.environment_edit_manage_title);
+                listItem.setText2(R.string.environment_edit_manage_description);
 
                 break;
 

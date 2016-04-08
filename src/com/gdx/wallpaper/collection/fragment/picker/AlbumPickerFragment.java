@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -67,6 +69,15 @@ public class AlbumPickerFragment extends GalleryPickerFragment {
                         .addToBackStack(null).commit();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AppCompatActivity activity = ((AppCompatActivity) getActivity());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.hide();
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Scaling;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "playlists.db";
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
 
     public static final String PLAYLIST_TABLE = "Playlist";
     public static final String ENTRY_TABLE = "Entry";
@@ -37,8 +37,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String TYPE = "Type";
         public static final String RANDOM = "Random";
         public static final String DISPLAY_CYCLING_PROGRESS = "DisplayCyclingProgress";
-        public static final String CYCLE_TIME = "CycleTime";
-        public static final String FADE_TIME = "FadeTime";
+        public static final String PAUSE_DURATION = "PauseDuration";
+        public static final String TRANSITION_DURATION = "TransitionDuration";
     }
 
     public static class CollectionColumns {
@@ -66,6 +66,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String NAME = "Name";
         public static final String TYPE = "Type";
         public static final String SCREEN_COUNT = "ScreenCount";
+
+        public static final String PERSPECTIVE = "Perspective";
+        public static final String UNZOOM = "Unzoom";
+        public static final String REFLECTION = "Reflection";
+        public static final String FLOATING = "Floating";
+        public static final String DEPTH = "Depth";
     }
 
     private StringBuilder builder;
@@ -126,12 +132,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         builder.append("CREATE TABLE ").append(TRANSITION_TABLE).append(" (")
                 .append(CommonColumns.ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(TransitionColumns.NAME).append(" TEXT, ")
-                .append(TransitionColumns.TYPE).append(" INTEGER NOT NULL, ")
+                .append(TransitionColumns.TYPE).append(" INTEGER NOT NULL DEFAULT 0, ")
                 .append(TransitionColumns.RANDOM).append(" INTEGER NOT NULL DEFAULT 0, ")
                 .append(TransitionColumns.DISPLAY_CYCLING_PROGRESS)
                 .append(" INTEGER NOT NULL DEFAULT 0, ")
-                .append(TransitionColumns.CYCLE_TIME).append(" INTEGER, ")
-                .append(TransitionColumns.FADE_TIME).append(" INTEGER")
+                .append(TransitionColumns.PAUSE_DURATION).append(" INTEGER NOT NULL DEFAULT 5000, ")
+                .append(TransitionColumns.TRANSITION_DURATION)
+                .append(" INTEGER NOT NULL DEFAULT 1000")
                 .append(')');
         db.execSQL(builder.toString());
         builder.setLength(0);
@@ -147,7 +154,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 .append(CommonColumns.ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(EnvironmentColumns.NAME).append(" TEXT, ")
                 .append(EnvironmentColumns.TYPE).append(" INTEGER NOT NULL DEFAULT 0, ")
-                .append(EnvironmentColumns.SCREEN_COUNT).append(" INTEGER NOT NULL DEFAULT 1")
+                .append(EnvironmentColumns.SCREEN_COUNT).append(" INTEGER NOT NULL DEFAULT 1, ")
+                .append(EnvironmentColumns.PERSPECTIVE).append(" REAL NOT NULL DEFAULT 0, ")
+                .append(EnvironmentColumns.UNZOOM).append(" REAL NOT NULL DEFAULT 0, ")
+                .append(EnvironmentColumns.REFLECTION).append(" REAL NOT NULL DEFAULT 0, ")
+                .append(EnvironmentColumns.FLOATING).append(" REAL NOT NULL DEFAULT 0, ")
+                .append(EnvironmentColumns.DEPTH).append(" REAL NOT NULL DEFAULT 0")
                 .append(')');
         db.execSQL(builder.toString());
         builder.setLength(0);
@@ -156,19 +168,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
-            case 3:
-                db.execSQL("ALTER TABLE " + PLAYLIST_TABLE + " ADD COLUMN " +
-                                   PlaylistColumns.ENVIRONMENT_ID + " INTEGER NOT NULL DEFAULT 0");
+            case 4:
+                db.execSQL("ALTER TABLE " + ENVIRONMENT_TABLE + " ADD COLUMN " +
+                                   EnvironmentColumns.PERSPECTIVE + " REAL NOT NULL DEFAULT 0");
 
-                StringBuilder builder = new StringBuilder();
-                builder.append("CREATE TABLE ").append(ENVIRONMENT_TABLE).append(" (")
-                        .append(CommonColumns.ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                        .append(EnvironmentColumns.NAME).append(" TEXT, ")
-                        .append(EnvironmentColumns.TYPE).append(" INTEGER NOT NULL DEFAULT 0, ")
-                        .append(EnvironmentColumns.SCREEN_COUNT)
-                        .append(" INTEGER NOT NULL DEFAULT 1")
-                        .append(')');
-                db.execSQL(builder.toString());
         }
     }
 

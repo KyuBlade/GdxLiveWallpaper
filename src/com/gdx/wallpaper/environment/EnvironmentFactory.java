@@ -3,9 +3,13 @@ package com.gdx.wallpaper.environment;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.gdx.wallpaper.setting.database.DatabaseHelper;
 import com.gdx.wallpaper.setting.database.operation.UpdateOperation;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class EnvironmentFactory {
 
@@ -21,6 +25,7 @@ public class EnvironmentFactory {
         SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
         try {
             database.beginTransaction();
+            contentValues.clear();
             contentValues.put(DatabaseHelper.EnvironmentColumns.NAME, environment.getName());
             contentValues
                     .put(DatabaseHelper.EnvironmentColumns.TYPE, environment.getType().ordinal());
@@ -29,7 +34,6 @@ public class EnvironmentFactory {
             long rowId = database.insertOrThrow(DatabaseHelper.ENVIRONMENT_TABLE, null,
                                                 contentValues);
             environment.setId(rowId);
-            contentValues.clear();
             database.setTransactionSuccessful();
 
             cache.put(environment);
@@ -41,6 +45,7 @@ public class EnvironmentFactory {
     }
 
     protected void update(Environment environment, UpdateOperation<Environment> updateOperation) {
+        contentValues.clear();
         updateOperation.provide(environment, contentValues);
 
         SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
@@ -49,7 +54,6 @@ public class EnvironmentFactory {
             database.update(DatabaseHelper.ENVIRONMENT_TABLE, contentValues,
                             DatabaseHelper.CommonColumns.ID + " = ?",
                             new String[] { String.valueOf(environment.getId()) });
-            contentValues.clear();
             database.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +64,27 @@ public class EnvironmentFactory {
 
     protected void update(long id, UpdateOperation<Environment> updateOperation) {
         update(get(id), updateOperation);
+    }
+
+    public void update(Environment environment, String columnName, Object value) {
+        contentValues.clear();
+        addAbsToContentValues(contentValues, columnName, value);
+        SQLiteDatabase database = DatabaseHelper.getInstance().getWritableDatabase();
+        try {
+            database.beginTransaction();
+            database.update(DatabaseHelper.ENVIRONMENT_TABLE, contentValues,
+                            DatabaseHelper.CommonColumns.ID + " = ?",
+                            new String[] { String.valueOf(environment.getId()) });
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    public void update(long id, String columnName, Object value) {
+        update(get(id), columnName, value);
     }
 
     protected void delete(Environment environment) {
@@ -186,6 +211,38 @@ public class EnvironmentFactory {
         int screenCount = cursor.getInt(cursor.getColumnIndexOrThrow(
                 DatabaseHelper.EnvironmentColumns.SCREEN_COUNT));
 
-        return new Environment(id, name, enumType, screenCount);
+        Class<? extends Environment> typeClass = enumType.getTypeClass();
+        try {
+            Constructor<? extends Environment>
+                    constructor =
+                    typeClass.getConstructor(long.class, String.class, int.class);
+            Environment environment = constructor.newInstance(id, name, screenCount);
+            environment.build(cursor);
+            return environment;
+        } catch (NoSuchMethodException e) {
+            Log.e("EnvironmentFactory", "Unable to instantiate environment " + enumType, e);
+        } catch (InvocationTargetException e) {
+            Log.e("EnvironmentFactory", "Unable to instantiate environment " + enumType, e);
+        } catch (InstantiationException e) {
+            Log.e("EnvironmentFactory", "Unable to instantiate environment " + enumType, e);
+        } catch (IllegalAccessException e) {
+            Log.e("EnvironmentFactory", "Unable to instantiate environment " + enumType, e);
+        }
+
+        return null;
+    }
+
+    private void addAbsToContentValues(ContentValues values, String columnName, Object value) {
+        if (value instanceof Integer) {
+            values.put(columnName, (int) value);
+        } else if (value instanceof Float) {
+            values.put(columnName, (float) value);
+        } else if (value instanceof String) {
+            values.put(columnName, (String) value);
+        } else if (value instanceof Double) {
+            values.put(columnName, (double) value);
+        } else if (value instanceof Long) {
+            values.put(columnName, (long) value);
+        }
     }
 }

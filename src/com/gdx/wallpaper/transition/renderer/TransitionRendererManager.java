@@ -1,74 +1,94 @@
 package com.gdx.wallpaper.transition.renderer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.transition.Transition;
-import com.gdx.wallpaper.environment.holder.AbstractSurfaceHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import aurelienribon.tweenengine.TweenManager;
-
 /**
  * Apply transition to surfaces of this manager in order.
- *
- * @param <T> Type of the surface holders
  */
-public class TransitionRendererManager<T extends AbstractSurfaceHolder> {
+public class TransitionRendererManager {
 
-    protected Environment environment;
+    protected final Environment environment;
     private final ImageManager imageManager;
-    protected final TweenManager tweenManager;
     private final Batch batch;
+    private final Skin skin;
+    private final Camera camera;
     private final Transition transition;
 
-    private Array<TransitionRendererInstance> instances;
+    private Array<AbstractTransitionRenderer> instances;
 
     public TransitionRendererManager(Environment environment, ImageManager imageManager,
-                                     TweenManager tweenManager, Transition transition,
-                                     Batch batch) {
+                                     Transition transition, Batch batch, Skin skin, Camera camera) {
         this.environment = environment;
         this.imageManager = imageManager;
-        this.tweenManager = tweenManager;
-        this.batch = batch;
         this.transition = transition;
+        this.batch = batch;
+        this.skin = skin;
+        this.camera = camera;
 
         instances = new Array<>();
     }
 
     public void update(float delta) {
-        for (TransitionRendererInstance instance : instances) {
+        for (AbstractTransitionRenderer instance : instances) {
             instance.render(delta);
         }
     }
 
+    public void postRender() {
+        batch.setColor(Color.WHITE);
+        batch.begin();
+        float size = Gdx.graphics.getWidth() / 5;
+        for (int i = 0; i < instances.size; i++) {
+            Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
+            batch.draw(instances.get(i).getTexture(), i * size, Gdx.graphics.getHeight() / 5, size,
+                       size);
+        }
+        batch.end();
+    }
+
     public void resize(int width, int height) {
-        for (TransitionRendererInstance instance : instances) {
+        for (AbstractTransitionRenderer instance : instances) {
             instance.resize(width, height);
         }
     }
 
+    public void dispose() {
+        for (AbstractTransitionRenderer instance : instances) {
+            instance.dispose();
+        }
+    }
+
     /**
-     * Add a surface to be managed by this manager.
-     *
-     * @param surfaceHolder the surface to manage
+     * Add an instance to be managed by this manager.
      */
-    public void registerSurface(T surfaceHolder) {
+    public void createInstance() {
         instances
-                .add(new TransitionRendererInstance(imageManager, newTransitionRenderer(),
-                                                    surfaceHolder,
-                                                    batch));
+                .add(newTransitionRenderer());
+    }
+
+    public AbstractTransitionRenderer getInstance(int index) {
+        return instances.get(index);
     }
 
     private AbstractTransitionRenderer newTransitionRenderer() {
         try {
             Constructor constructor = transition.getType().getRendererClass()
-                    .getConstructor(TransitionRendererManager.class, transition.getClass());
+                    .getConstructor(ImageManager.class, Batch.class, Skin.class, Camera.class,
+                                    transition.getClass());
             return (AbstractTransitionRenderer) constructor
-                    .newInstance(this, transition);
+                    .newInstance(imageManager, batch, skin, camera, transition);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -80,23 +100,5 @@ public class TransitionRendererManager<T extends AbstractSurfaceHolder> {
         }
 
         return null;
-    }
-
-    /**
-     * Remove a surface from this manager.
-     *
-     * @param surfaceHolder surface to remove
-     */
-    public void unregisterSurface(T surfaceHolder) {
-        for (TransitionRendererInstance instance : instances) {
-            if (instance.surface.equals(surfaceHolder)) {
-                instances.removeValue(instance, false);
-                instance.dispose();
-            }
-        }
-    }
-
-    public Array<TransitionRendererInstance> getInstances() {
-        return instances;
     }
 }

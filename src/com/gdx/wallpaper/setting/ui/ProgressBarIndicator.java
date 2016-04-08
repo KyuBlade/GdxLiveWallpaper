@@ -2,11 +2,11 @@ package com.gdx.wallpaper.setting.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class ProgressBarIndicator extends Widget {
+public class ProgressBarIndicator extends Actor {
 
     private ProgressBarIndicatorStyle style;
 
@@ -26,36 +26,22 @@ public class ProgressBarIndicator extends Widget {
         }
 
         setStyle(skin.get(styleName, ProgressBarIndicatorStyle.class));
-        setSize(getPrefWidth(), getPrefHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         style.indicatorDrawable.draw(batch, getX(),
                                      getY(),
                                      (getWidth() * (currentProgress / maxProgress)),
                                      getHeight());
-//        batch.setColor(Color.WHITE);
     }
 
     public void setStyle(ProgressBarIndicatorStyle style) {
         this.style = style;
 
         setColor(style.color);
-    }
-
-    @Override
-    public float getPrefWidth() {
-        return 200f;
-    }
-
-    @Override
-    public float getPrefHeight() {
-        return 25;
     }
 
     public float getMaxProgress() {

@@ -1,39 +1,43 @@
 package com.gdx.wallpaper.transition;
 
 import com.gdx.wallpaper.R;
-import com.gdx.wallpaper.transition.fragment.FadeTransitionEditFragment;
-import com.gdx.wallpaper.transition.fragment.NullTransitionEditFragment;
-import com.gdx.wallpaper.transition.fragment.TransitionEditFragment;
+import com.gdx.wallpaper.transition.fragment.model.CrossFadeTransitionModel;
+import com.gdx.wallpaper.transition.fragment.model.NullTransitionModel;
+import com.gdx.wallpaper.transition.fragment.model.TransitionModel;
 import com.gdx.wallpaper.transition.renderer.AbstractTransitionRenderer;
-import com.gdx.wallpaper.transition.renderer.FadeTransitionRenderer;
+import com.gdx.wallpaper.transition.renderer.CrossFadeTransitionRenderer;
 import com.gdx.wallpaper.transition.renderer.NullTransitionRenderer;
-import com.gdx.wallpaper.transition.type.FadeTransition;
+import com.gdx.wallpaper.transition.renderer.preview.CrossFadeTransitionPreviewRenderer;
+import com.gdx.wallpaper.transition.renderer.preview.NullTransitionPreviewRenderer;
+import com.gdx.wallpaper.transition.renderer.preview.TransitionPreviewRenderer;
+import com.gdx.wallpaper.transition.type.CrossFadeTransition;
 import com.gdx.wallpaper.transition.type.NullTransition;
 
 public enum TransitionType {
-    NONE(1, NullTransition.class, R.string.transition_type_none, NullTransitionEditFragment.class,
-         NullTransitionRenderer.class),
-    FADE(2, FadeTransition.class, R.string.transition_type_fade, FadeTransitionEditFragment.class,
-         FadeTransitionRenderer.class);
+    NONE(R.string.transition_type_none, NullTransition.class, NullTransitionRenderer.class,
+         NullTransitionModel.class,
+         NullTransitionPreviewRenderer.class, "null.frag"),
+    CROSS_FADE(R.string.transition_type_fade_cross, CrossFadeTransition.class,
+               CrossFadeTransitionRenderer.class, CrossFadeTransitionModel.class,
+               CrossFadeTransitionPreviewRenderer.class, "crossFade.frag");
 
-    private int id;
     private int nameRes;
     private Class<? extends Transition> transitionClass;
-    protected Class<? extends TransitionEditFragment> editFragmentClass;
-    protected Class<? extends AbstractTransitionRenderer> rendererClass;
+    private Class<? extends AbstractTransitionRenderer> rendererClass;
+    private Class<? extends TransitionModel> modelClass;
+    private Class<? extends TransitionPreviewRenderer> previewRendererClass;
+    private String shader;
 
-    TransitionType(int id, Class<? extends Transition> type, int nameRes,
-                   Class<? extends TransitionEditFragment> editFragmentClass,
-                   Class<? extends AbstractTransitionRenderer> rendererClass) {
-        this.id = id;
+    TransitionType(int nameRes, Class<? extends Transition> type,
+                   Class<? extends AbstractTransitionRenderer> rendererClass,
+                   Class<? extends TransitionModel> modelClass,
+                   Class<? extends TransitionPreviewRenderer> previewRendererClass, String shader) {
         this.transitionClass = type;
         this.nameRes = nameRes;
-        this.editFragmentClass = editFragmentClass;
+        this.modelClass = modelClass;
         this.rendererClass = rendererClass;
-    }
-
-    public int getId() {
-        return id;
+        this.previewRendererClass = previewRendererClass;
+        this.shader = shader;
     }
 
     public Class<? extends Transition> getTransitionClass() {
@@ -44,21 +48,19 @@ public enum TransitionType {
         return nameRes;
     }
 
-    public Class<? extends TransitionEditFragment> getEditFragmentClass() {
-        return editFragmentClass;
+    public Class<? extends TransitionModel> getModelClass() {
+        return modelClass;
     }
 
     public Class<? extends AbstractTransitionRenderer> getRendererClass() {
         return rendererClass;
     }
 
-    public static TransitionType getFor(int id) {
-        for (TransitionType type : values()) {
-            if (type.id == id) {
-                return type;
-            }
-        }
+    public Class<? extends TransitionPreviewRenderer> getPreviewRendererClass() {
+        return previewRendererClass;
+    }
 
-        return null;
+    public String getShader() {
+        return shader;
     }
 }

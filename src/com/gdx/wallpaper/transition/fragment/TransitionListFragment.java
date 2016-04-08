@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,8 +55,8 @@ public class TransitionListFragment extends ListFragment implements Pageable {
             selectMode = getArguments().getBoolean(SELECT_MODE);
         }
 
-        setHasOptionsMenu(true);
         adapter = new TransitionAdapter(getActivity());
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -71,6 +73,11 @@ public class TransitionListFragment extends ListFragment implements Pageable {
 
         registerForContextMenu(getListView());
         BusProvider.getInstance().register(this);
+
+        AppCompatActivity activity = ((AppCompatActivity) getActivity());
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.show();
+        activity.supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -120,8 +127,10 @@ public class TransitionListFragment extends ListFragment implements Pageable {
 
         switch (item.getItemId()) {
             case R.id.floating_menu_edit:
-                AdapterView.AdapterContextMenuInfo listItem = (AdapterView.AdapterContextMenuInfo) item
-                        .getMenuInfo();
+                AdapterView.AdapterContextMenuInfo
+                        listItem =
+                        (AdapterView.AdapterContextMenuInfo) item
+                                .getMenuInfo();
                 TransitionAdapter adapter = (TransitionAdapter) getListAdapter();
                 Transition transition = adapter.getItem(listItem.position);
                 BusProvider.getInstance().post(new TransitionEditEvent(transition));

@@ -2,21 +2,24 @@ package com.gdx.wallpaper.environment.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 
+import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.environment.EnvironmentManager;
+import com.gdx.wallpaper.environment.fragment.shader.EnvironmentShaderEditFragment;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.environment.EnvironmentChangedEvent;
 import com.gdx.wallpaper.setting.ui.dialog.environment.EnvironmentNameEditDialog;
 import com.gdx.wallpaper.setting.ui.dialog.environment.EnvironmentScreenCountChoiceDialog;
-import com.gdx.wallpaper.setting.ui.dialog.environment.EnvironmentTypeChoiceDialog;
 import com.squareup.otto.Subscribe;
 
 public class EnvironmentEditFragment extends ListFragment {
 
-    public static final String TAG = "CollectionEditFragment";
+    public static final String TAG = "EnvironmentEditFragment";
 
     public static final String ENVIRONMENT_ID = "EnvironmentId";
 
@@ -41,9 +44,7 @@ public class EnvironmentEditFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         long environmentId = getArguments().getLong(ENVIRONMENT_ID, -1);
-        if (environmentId != -1) {
-            environment = EnvironmentManager.getInstance().get(environmentId);
-        }
+        environment = EnvironmentManager.getInstance().get(environmentId);
 
         adapter = new EnvironmentEditAdapter(getActivity(), environment);
         setListAdapter(adapter);
@@ -59,16 +60,20 @@ public class EnvironmentEditFragment extends ListFragment {
                 break;
 
             case EnvironmentEditAdapter.TYPE:
-                EnvironmentTypeChoiceDialog.newInstance(environment.getId(), environment.getType())
-                        .show(getFragmentManager(), EnvironmentTypeChoiceDialog.TAG);
-
                 break;
 
             case EnvironmentEditAdapter.SCREEN_COUNT:
                 EnvironmentScreenCountChoiceDialog
                         .newInstance(environment.getId(), environment.getScreenCount())
                         .show(getFragmentManager(), EnvironmentScreenCountChoiceDialog.TAG);
+                break;
 
+            case EnvironmentEditAdapter.MANAGE:
+                getFragmentManager().beginTransaction().replace(R.id.content_container,
+                                                                EnvironmentShaderEditFragment
+                                                                        .newInstance(environment
+                                                                                             .getId()))
+                        .addToBackStack(null).commit();
                 break;
         }
     }
@@ -76,6 +81,11 @@ public class EnvironmentEditFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         BusProvider.getInstance().register(this);
     }

@@ -1,6 +1,23 @@
 <resources>
 
     <string name="app_name">GdxLiveWallpaper</string>
-    <string name="description">Wallpaper description</string>
+    <string name="description">Description du fond d\'écran</string>
+    <string name="add">Ajouter</string>
+    <string name="cancel">Annuler</string>
+    <string name="collection"></string>
+    <string name="collection_empty">Aucune collections actuellement créée.</string>
+    <string name="collection_entries_empty">Pas d\'images disponibles dans la collection.</string>
+    <string name="collection_manage_description">Définir les images de cette collection.</string>
+    <string name="collection_manage_title">Gérer</string>
+    <string name="collection_remove_deactivate">La collection était utilisé par la liste de lecture courrante. Liste de lecture désactivée.</string>
+    <string name="collection_wallpaper_empty">Votre collection ne contiens aucune images.</string>
+    <string name="collection_wallpaper_unset">Aucune collection définit pour cette liste de lecture.</string>
+    <string name="dialog_collection_edit_name_message">Entrez le nom de la collection</string>
+    <string name="dialog_collection_edit_name_title">Nom de la collection</string>
+    <string name="dialog_edit_environment_screen_count_title">Combien d\'écrans d\'accueil avez vous?</string>
+    <string name="dialog_edit_environment_type_title">Choisissez un environment</string>
+    <string name="dialog_edit_transition_title">Choisissez une transition</string>
+    <string name="dialog_environment_edit_name_message">Entrez le nom de l\'environment</string>
+    <string name="dialog_environment_edit_name_title">Nom de l\'environment</string>
 
 </resources>

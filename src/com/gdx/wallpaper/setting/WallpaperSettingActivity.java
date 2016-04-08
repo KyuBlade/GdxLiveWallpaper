@@ -20,11 +20,11 @@ import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.playlist.PlaylistManager;
 import com.gdx.wallpaper.playlist.fragment.PlaylistEditFragment;
 import com.gdx.wallpaper.setting.database.DatabaseHelper;
+import com.gdx.wallpaper.setting.database.operation.UpdateOperation;
 import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistActiveUpdateOperation;
 import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistCollectionUpdateOperation;
 import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistNameUpdateOperation;
 import com.gdx.wallpaper.setting.database.operation.playlist.PlaylistTransitionUpdateOperation;
-import com.gdx.wallpaper.setting.database.operation.UpdateOperation;
 import com.gdx.wallpaper.setting.eventbus.BusProvider;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.collection.CollectionCreatedEvent;
@@ -44,9 +44,10 @@ import com.gdx.wallpaper.setting.eventbus.transition.TransitionChangedEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionCreatedEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionEditEvent;
 import com.gdx.wallpaper.setting.eventbus.transition.TransitionRemovedEvent;
+import com.gdx.wallpaper.setting.fragment.MainFragment;
 import com.gdx.wallpaper.transition.Transition;
 import com.gdx.wallpaper.transition.TransitionManager;
-import com.gdx.wallpaper.transition.fragment.TransitionGlobalEditFragment;
+import com.gdx.wallpaper.transition.fragment.TransitionEditFragment;
 import com.gdx.wallpaper.wallpaper.UpdateReceiver;
 import com.squareup.otto.Subscribe;
 
@@ -79,6 +80,7 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        pauseWallpaperService();
         BusProvider.getInstance().register(this);
     }
 
@@ -86,12 +88,8 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
+        resumeWallpaperService();
         BusProvider.getInstance().unregister(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Subscribe
@@ -134,6 +132,20 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     }
 
     @Subscribe
+    public void createEnvironment(EnvironmentCreatedEvent event) {
+        try {
+            Environment newEnvironment = event.getType().getTypeClass().newInstance();
+            EnvironmentManager.getInstance().insert(newEnvironment);
+
+            BusProvider.getInstance().post(new EnvironmentEditEvent(newEnvironment.getId()));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
     public void changeEnvironment(EnvironmentChangedEvent event) {
         long environmentId = event.getEnvironmentId();
         UpdateOperation updateOperation = event.getUpdateOperation();
@@ -147,14 +159,6 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     @Subscribe
     public void editEnvironment(EnvironmentEditEvent event) {
         long environmentId = event.getEnvironmentId();
-        if (environmentId == -1) {
-            Environment environment = new Environment();
-            EnvironmentManager.getInstance().insert(environment);
-            environmentId = environment.getId();
-
-            BusProvider.getInstance().post(new EnvironmentCreatedEvent());
-        }
-
         getSupportFragmentManager().beginTransaction().replace(R.id.content_container,
                                                                EnvironmentEditFragment.newInstance(
                                                                        environmentId))
@@ -186,9 +190,8 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     public void editTransition(TransitionEditEvent event) {
         Transition transition = event.getTransition();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_container,
-                                                               TransitionGlobalEditFragment
-                                                                       .newInstance(
-                                                                               transition.getId()))
+                                                               TransitionEditFragment
+                                                                       .newInstance(transition))
                 .addToBackStack(null).commit();
     }
 
@@ -312,6 +315,20 @@ public class WallpaperSettingActivity extends AppCompatActivity {
     }
 
     private void updateWallpaperService() {
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(UpdateReceiver.TAG));
+        Intent intent = new Intent(UpdateReceiver.TAG);
+        intent.putExtra(UpdateReceiver.ACTION, UpdateReceiver.Action.UPDATE);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void pauseWallpaperService() {
+        Intent intent = new Intent(UpdateReceiver.TAG);
+        intent.putExtra(UpdateReceiver.ACTION, UpdateReceiver.Action.PAUSE);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void resumeWallpaperService() {
+        Intent intent = new Intent(UpdateReceiver.TAG);
+        intent.putExtra(UpdateReceiver.ACTION, UpdateReceiver.Action.RESUME);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

@@ -10,6 +10,12 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     public static final String TAG = "Update";
 
+    public static final String ACTION = "Action";
+
+    public enum Action {
+        UPDATE, PAUSE, RESUME
+    }
+
     private WallpaperService service;
     private boolean updateQueued;
 
@@ -19,16 +25,27 @@ public class UpdateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!updateQueued) {
-            updateQueued = true;
-
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    service.updateWallpaperService();
-                    updateQueued = false;
+        final Action action = (Action) intent.getSerializableExtra(ACTION);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                switch (action) {
+                    case UPDATE:
+                        if (!updateQueued) {
+                            updateQueued = true;
+                            service.updateWallpaperService();
+                        }
+                        break;
+                    case PAUSE:
+                        service.pauseWallpaperService();
+                        break;
+                    case RESUME:
+                        service.resumeWallpaperService();
+                        break;
                 }
-            });
-        }
+
+                updateQueued = false;
+            }
+        });
     }
 }

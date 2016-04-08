@@ -2,6 +2,8 @@ package com.gdx.wallpaper.collection.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 
@@ -74,6 +76,8 @@ public class CollectionEditFragment extends ListFragment {
         super.onResume();
 
         BusProvider.getInstance().register(this);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.hide();
     }
 
     @Override

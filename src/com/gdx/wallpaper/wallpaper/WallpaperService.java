@@ -21,6 +21,7 @@ public class WallpaperService extends AndroidLiveWallpaperService
     private WallpaperRenderer renderer;
 
     private boolean preview;
+    private boolean running = true;
 
     @Override
     public void onCreateApplication() {
@@ -41,13 +42,14 @@ public class WallpaperService extends AndroidLiveWallpaperService
         updateReceiver = new UpdateReceiver(this);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(updateReceiver, new IntentFilter(UpdateReceiver.TAG));
-
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-
     }
 
     @Override
     public void render() {
+        if (!running) {
+            return;
+        }
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         if (renderer != null) {
@@ -106,6 +108,16 @@ public class WallpaperService extends AndroidLiveWallpaperService
 
         Playlist playlist = PlaylistManager.getInstance().getActive();
         renderer = new WallpaperRenderer(playlist);
+    }
+
+    public void pauseWallpaperService() {
+        Log.i("WallpaperService", "Pause");
+//        running = false;
+    }
+
+    public void resumeWallpaperService() {
+        Log.i("WallpaperService", "Resume");
+        running = true;
     }
 
     @Override

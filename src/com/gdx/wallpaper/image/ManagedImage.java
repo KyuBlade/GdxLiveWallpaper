@@ -1,13 +1,16 @@
 package com.gdx.wallpaper.image;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import com.gdx.wallpaper.collection.entry.Entry;
+import com.gdx.wallpaper.util.Utils;
 
 public class ManagedImage {
 
@@ -19,29 +22,52 @@ public class ManagedImage {
     private State state = State.INITIALIZED;
 
     private Texture texture;
-    private final Color color;
 
-    private Vector2 initialPortraitOffsets;
-    private float portraitRotation;
-    private float portraitZoom;
-
-    private Vector2 initialLandscapeOffsets;
-    private float landscapeRotation;
-    private float landscapeZoom;
+    private TextureRegion portraitRegion;
+    private TextureRegion landscapeRegion;
 
     public ManagedImage() {
-        color = Color.WHITE.cpy();
-        initialPortraitOffsets = new Vector2();
-        initialLandscapeOffsets = new Vector2();
     }
 
-    protected void setup(Entry entry) {
-        initialLandscapeOffsets.set(entry.getLandscapeOffsetX(), entry.getLandscapeOffsetY());
-        landscapeRotation = entry.getLandscapeRotation();
-        landscapeZoom = entry.getLandscapeZoom();
-        initialPortraitOffsets.set(entry.getPortraitOffsetX(), entry.getPortraitOffsetY());
-        portraitRotation = entry.getPortraitRotation();
-        portraitZoom = entry.getPortraitZoom();
+    protected void setup(Entry entry, Texture texture) {
+        this.texture = texture;
+
+        float portOffX = entry.getPortraitOffsetX();
+        float portOffY = entry.getPortraitOffsetY();
+
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        boolean isLandscape = Utils.isLandscape();
+        int portraitScreenWidth = (isLandscape) ? screenHeight : screenWidth;
+        int portraitScreenHeight = (isLandscape) ? screenWidth : screenHeight;
+        int landscapeScreenWidth = (isLandscape) ? screenWidth : screenHeight;
+        int landscapeScreenHeight = (isLandscape) ? screenHeight : screenWidth;
+
+        // Portrait Region
+        int regionX = MathUtils.floor(portOffX);
+        int regionY = MathUtils.floor(portOffY);
+
+        Vector2
+                scaling =
+                Scaling.fit.apply(portraitScreenWidth, portraitScreenHeight, getTextureWidth(),
+                                  getTextureHeight());
+
+        int regionWidth = (int) scaling.x;
+        int regionHeight = (int) scaling.y;
+
+        regionX += (getTextureWidth() - regionWidth) * 0.5f;
+        regionY += (getTextureHeight() - regionHeight) * 0.5f;
+        portraitRegion = new TextureRegion(texture, regionX, regionY, regionWidth, regionHeight);
+        portraitRegion.flip(false, true);
+
+        Log.i("Region",
+              "Landscape : " + isLandscape + ", region = [" + regionX + ", " + regionY + ", " +
+                      regionWidth + " / " + getTextureWidth() + ", " + regionHeight + " / " +
+                      getTextureHeight() + "]");
+
+        // Landscape Region
+        float landOffX = entry.getLandscapeOffsetX();
+        float landOffY = entry.getLandscapeOffsetY();
     }
 
     public void setAssetDescriptor(
@@ -61,14 +87,6 @@ public class ManagedImage {
         this.state = state;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
     public int getTextureWidth() {
         return texture.getWidth();
     }
@@ -77,10 +95,13 @@ public class ManagedImage {
         return texture.getHeight();
     }
 
-    public void draw(Batch batch) {
-        Vector2 scaledSize =
-                Scaling.fill.apply(getTextureWidth(), getTextureHeight(), Gdx.graphics.getWidth(),
-                                   Gdx.graphics.getHeight());
-        batch.draw(texture, 0f, 0f, scaledSize.x, scaledSize.y);
+    public TextureRegion getRegion() {
+        return Utils.isLandscape() ? landscapeRegion : portraitRegion;
+    }
+
+    public void bind(int unit) {
+        if (texture != null) {
+            texture.bind(unit);
+        }
     }
 }

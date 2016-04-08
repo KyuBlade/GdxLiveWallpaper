@@ -32,7 +32,7 @@
     <string name="playlist_page_name">Playlists</string>
     <string name="playlist_empty">No playlists currently created.</string>
     <string name="playlist_edit_name">Name</string>
-    <string name="playlist_wallpaper_unset">"No playlist set.\n Create a new playlist in the live wallpaper settings."</string>
+    <string name="playlist_wallpaper_unset">No playlist set.\n Create a new playlist in the live wallpaper settings.</string>
 
 
     <!-- Transition -->
@@ -44,12 +44,12 @@
     <string name="transition_cycling_progress_title">Display cycling progress</string>
     <string name="transition_cycling_progress_description"></string>
     <string name="transition_edit_manage_title">Manage</string>
-    <string name="transition_edit_manage_description">Setting the transitionId</string>
+    <string name="transition_edit_manage_description">Setting the transition</string>
     <string name="transition_type_none">None</string>
-    <string name="transition_type_fade">Fade</string>
+    <string name="transition_type_fade_cross">Cross Fade</string>
     <string name="transition_time_fade">Fade time</string>
     <string name="transition_time_cycle">Cycle time</string>
-    <string name="transition_remove_deactivate">The transitionId was used by the current playlist. Playlist deactivated.</string>
+    <string name="transition_remove_deactivate">The transition was used by the current playlist. Playlist deactivated.</string>
 
     <!-- Collection -->
     <string name="collection">Collection</string>
@@ -58,8 +58,8 @@
     <string name="collection_manage_title">Manage</string>
     <string name="collection_manage_description">Set the images of this collection.</string>
     <string name="collection_remove_deactivate">The collection was used by the current playlist. Playlist deactivated.</string>
-    <string name="collection_wallpaper_unset">"No collection set for this playlist."</string>
-    <string name="collection_wallpaper_empty">"Your collection contains no images."</string>
+    <string name="collection_wallpaper_unset">No collection set for this playlist.</string>
+    <string name="collection_wallpaper_empty">Your collection contains no images.</string>
     <string name="collection_entries_empty">No images available in the collection.</string>
 
     <!-- Environment -->
@@ -69,9 +69,24 @@
     <string name="environment_type_none">None</string>
     <string name="environment_type_slide">Slide</string>
     <string name="environment_type_cube">Cube</string>
-    <string name="environment_wallpaper_empty">"No environment defined."</string>
+    <string name="environment_type_page_curl">Page Curl</string>
+    <string name="environment_type_swap">Swap</string>
+    <string name="environment_edit_manage_title">Manage</string>
+    <string name="environment_edit_manage_description">Setting the environment</string>
+    <string name="environment_wallpaper_empty">No environment defined.</string>
     <string name="environment_edit_screen_count_title">Home screen count</string>
     <string name="environment_edit_screen_count_message">Number of screen on the home</string>
+
+    <!-- Preview -->
+    <string name="environment_transition_duration">Transition duration (Preview only)</string>
+    <string name="environment_pause_duration">Pause duration (Preview only)</string>
+    <string name="transition_transition_duration">Transition duration</string>
+    <string name="transition_pause_duration">Pause duration</string>
+    <string name="shader_property_perspective">Perspective</string>
+    <string name="shader_property_reflection">Reflection</string>
+    <string name="shader_property_floating">Floating</string>
+    <string name="shader_property_unzoom">Unzoom</string>
+    <string name="shader_property_depth">Depth</string>
 
     <!-- Dialog -->
     <string name="dialog_remove_title">Remove confirmation</string>
@@ -92,8 +107,14 @@
     <string name="dialog_environment_edit_name_title">Environment name</string>
     <string name="dialog_environment_edit_name_message">Enter the environment name</string>
     <string name="dialog_edit_environment_type_title">Choose an environment</string>
-    <string name="dialog_edit_environment_screen_count_title">How many screens do you have on your home ?</string>
+    <string name="dialog_edit_environment_screen_count_title">How many screens do you have on your home?</string>
     <string name="dialog_wallpaper_image_edit_help_title">Help</string>
     <string name="dialog_wallpaper_image_edit_help_message">Help dialog </string>
 
+    <!-- Duration Picker -->
+    <string name="days_tiny">d</string>
+    <string name="hours_tiny">h</string>
+    <string name="minutes_tiny">m</string>
+    <string name="seconds_tiny">s</string>
+    <string name="milliseconds_tiny">ms</string>
 </resources>

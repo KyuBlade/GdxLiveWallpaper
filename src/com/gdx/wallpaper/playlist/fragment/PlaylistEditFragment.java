@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 
@@ -73,8 +75,8 @@ public class PlaylistEditFragment extends ListFragment {
             case PlaylistEditAdapter.TRANSITION:
                 Fragment fragment = TransitionListFragment.newInstance(true);
                 fragment.setTargetFragment(this, SELECT_TRANSITION_REQUEST_CODE);
-                getFragmentManager().beginTransaction().hide(this)
-                        .add(R.id.content_container, fragment, TransitionListFragment.TAG)
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_container, fragment, TransitionListFragment.TAG)
                         .addToBackStack(null).commit();
 
                 break;
@@ -82,20 +84,18 @@ public class PlaylistEditFragment extends ListFragment {
             case PlaylistEditAdapter.COLLECTION:
                 fragment = CollectionListFragment.newInstance(true);
                 fragment.setTargetFragment(this, SELECT_COLLECTION_REQUEST_CODE);
-                getFragmentManager().beginTransaction().hide(this)
-                        .add(R.id.content_container, fragment, CollectionListFragment.TAG)
-                        .addToBackStack(
-                                null).commit();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_container, fragment, CollectionListFragment.TAG)
+                        .addToBackStack(null).commit();
 
                 break;
 
             case PlaylistEditAdapter.ENVIRONMENT:
                 fragment = EnvironmentListFragment.newInstance(true);
                 fragment.setTargetFragment(this, SELECT_ENVIRONMENT_REQUEST_CODE);
-                getFragmentManager().beginTransaction().hide(this)
-                        .add(R.id.content_container, fragment, EnvironmentListFragment.TAG)
-                        .addToBackStack(
-                                null).commit();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_container, fragment, EnvironmentListFragment.TAG)
+                        .addToBackStack(null).commit();
 
                 break;
         }
@@ -106,6 +106,8 @@ public class PlaylistEditFragment extends ListFragment {
         super.onResume();
 
         BusProvider.getInstance().register(this);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.hide();
     }
 
     @Override
