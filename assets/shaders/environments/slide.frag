@@ -1,6 +1,6 @@
 // Converted from https://github.com/rectalogic/rendermix-basic-effects/blob/master/assets/com/rendermix/Slide/Slide.frag
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
 varying vec2 v_texCoord;

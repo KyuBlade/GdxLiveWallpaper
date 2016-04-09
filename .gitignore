@@ -1,3 +1,5 @@
+/libs/jni/armeabi-v7a/libgapii.so
+/libs/jni/armeabi-v7a/gapir.apk
 ### Gradle template
 .gradle
 build/

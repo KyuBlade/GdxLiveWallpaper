@@ -16,6 +16,10 @@ import com.gdx.wallpaper.wallpaper.render.WallpaperRenderer;
 public class WallpaperService extends AndroidLiveWallpaperService
         implements WallpaperListener {
 
+    static {
+//        System.loadLibrary("gapii");
+    }
+
     private UpdateReceiver updateReceiver;
 
     private WallpaperRenderer renderer;

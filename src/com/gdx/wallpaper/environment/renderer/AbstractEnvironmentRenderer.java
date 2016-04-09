@@ -96,9 +96,17 @@ public abstract class AbstractEnvironmentRenderer<T extends Environment> {
         int toScreen = fromScreen + 1;
 
         if (currentScreen != fromScreen) {
+            if (from != null) {
+                from.setRendering(false);
+            }
             from = manager.getInstance(fromScreen);
+            from.setRendering(true);
             if (toScreen <= screenCount) {
+                if (to != null) {
+                    to.setRendering(false);
+                }
                 to = manager.getInstance(toScreen);
+                to.setRendering(progress != 1f);
             }
             currentScreen = fromScreen;
         }

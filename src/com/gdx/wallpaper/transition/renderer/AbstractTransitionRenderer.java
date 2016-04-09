@@ -43,6 +43,7 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
     protected ManagedImage currentImage;
     protected ManagedImage nextImage;
     protected float transitionProgress;
+    protected boolean rendering;
 
     private ProgressBarIndicator indicator;
 
@@ -197,7 +198,9 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
 
         update(delta);
 
-        renderSurface();
+        if (rendering) {
+            renderSurface();
+        }
     }
 
     protected abstract void update(float delta);
@@ -206,7 +209,7 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
         // Create FBO and set it to the surface
         frameBuffer.begin();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         if (currentImage != null) {
             currentImage.bind(1);
@@ -255,6 +258,10 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
 
     public Texture getTexture() {
         return frameBuffer.getColorBufferTexture();
+    }
+
+    public void setRendering(boolean rendering) {
+        this.rendering = rendering;
     }
 
     /**

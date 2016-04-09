@@ -55,6 +55,8 @@ public class WallpaperRenderer implements Renderer {
 
     private ShapeRenderer debugRenderer;
 
+    private float accumulator;
+
     public WallpaperRenderer(Playlist playlist) {
         assetManager = new AssetManager();
         uiViewport = new ScreenViewport();
@@ -158,6 +160,12 @@ public class WallpaperRenderer implements Renderer {
         uiStage.getViewport().apply();
         uiStage.act(delta);
         uiStage.draw();
+
+        accumulator += delta;
+        if(accumulator >= 1f) {
+            accumulator = 0f;
+            Log.i("RenderFrame", "FPS : " + Gdx.graphics.getFramesPerSecond());
+        }
     }
 
     @Override
