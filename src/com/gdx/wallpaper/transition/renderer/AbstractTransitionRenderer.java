@@ -32,10 +32,10 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
     private final WallpaperChangeSubscriber wallpaperChangeSubscriber;
 
     protected boolean transitioning;
-    private long currentCycleTime;
+    private long currentPauseTime;
 
     private boolean startTransition;
-    private boolean cycling;
+    private boolean pause;
 
     private ShaderProgram shader;
     private FrameBuffer frameBuffer;
@@ -136,7 +136,7 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
             startTransition = true;
         } else {
             Log.i("TransitionRenderer", "Begin transition");
-            currentCycleTime = 0L;
+            currentPauseTime = 0L;
 
             indicator.setProgress(0L);
 
@@ -148,19 +148,19 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
     }
 
     /**
-     * End cycling state and load next image(s) and start transitionRenderer when loaded.
+     * End pause state and load next image(s) and start transitionRenderer when loaded.
      */
-    protected final void endCycling() {
-        endCycling(false);
+    protected final void endPause() {
+        endPause(false);
     }
 
     /**
-     * End cycling state and load next image(s) and start transitionRenderer when loaded.
+     * End pause state and load next image(s) and start transitionRenderer when loaded.
      *
      * @param backward order in which to load the next image
      */
-    protected final void endCycling(boolean backward) {
-        cycling = false;
+    protected final void endPause(boolean backward) {
+        pause = false;
 
         loadImage(backward);
         beginTransition();
@@ -180,19 +180,19 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
         quad.setFrom(currentImage.getRegion());
 
         onTransitionFinish();
-        cycling = true;
+        pause = true;
     }
 
     public final void render(float delta) {
         long pauseDuration = transition.getPauseDuration();
-        if (cycling) { // Cycling
-            currentCycleTime += delta * 1000L;
-            if (transition.isDisplayCyclingProgress()) {
-                indicator.setProgress((float) currentCycleTime /
+        if (pause) {
+            currentPauseTime += delta * 1000L;
+            if (transition.isDisplayPauseProgress()) {
+                indicator.setProgress((float) currentPauseTime /
                                               transition.getPauseDuration());
             }
-            if (currentCycleTime >= pauseDuration) {
-                endCycling();
+            if (currentPauseTime >= pauseDuration) {
+                endPause();
             }
         }
 
@@ -225,16 +225,16 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
         quad.draw(shader);
         shader.end();
 
-        batch.begin();
-        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
-        indicator.draw(batch, 1f);
-
-        batch.end();
+//        batch.begin();
+//        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
+//        indicator.draw(batch, 1f);
+//
+//        batch.end();
         frameBuffer.end();
     }
 
     protected void resize(int width, int height) {
-//        quad.setSize(width, height); // Fix flipping
+        quad.setSize(width, height); // Fix flipping
         indicator.setSize(width, 25f);
         indicator.setPosition(0f, height - indicator.getHeight() -
                 Utils.getStatusBarHeight());
@@ -286,8 +286,8 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
             Log.i("Change", "Force change");
 
             boolean backward = event.isBackward();
-            if (cycling) {
-                endCycling(backward);
+            if (pause) {
+                endPause(backward);
             }
         }
     }

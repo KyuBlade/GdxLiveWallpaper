@@ -4,24 +4,20 @@ import com.gdx.wallpaper.R;
 import com.gdx.wallpaper.environment.fragment.model.CubeEnvironmentModel;
 import com.gdx.wallpaper.environment.fragment.model.EnvironmentModel;
 import com.gdx.wallpaper.environment.fragment.model.NullEnvironmentModel;
-import com.gdx.wallpaper.environment.fragment.model.PageCurlEnvironmentModel;
 import com.gdx.wallpaper.environment.fragment.model.SlideEnvironmentModel;
 import com.gdx.wallpaper.environment.fragment.model.SwapEnvironmentModel;
-import com.gdx.wallpaper.environment.renderer.CubeEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.AbstractEnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.CubeEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.NullEnvironmentRenderer;
-import com.gdx.wallpaper.environment.renderer.PageCurlEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.SlideEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.SwapEnvironmentRenderer;
 import com.gdx.wallpaper.environment.renderer.preview.CubeEnvironmentPreviewRenderer;
 import com.gdx.wallpaper.environment.renderer.preview.EnvironmentPreviewRenderer;
 import com.gdx.wallpaper.environment.renderer.preview.NullEnvironmentPreviewRenderer;
-import com.gdx.wallpaper.environment.renderer.preview.PageCurlEnvironmentPreviewRenderer;
 import com.gdx.wallpaper.environment.renderer.preview.SlideEnvironmentPreviewRenderer;
 import com.gdx.wallpaper.environment.renderer.preview.SwapEnvironmentPreviewRenderer;
 import com.gdx.wallpaper.environment.type.CubeEnvironment;
 import com.gdx.wallpaper.environment.type.NullEnvironment;
-import com.gdx.wallpaper.environment.type.PageCurlEnvironment;
 import com.gdx.wallpaper.environment.type.SlideEnvironment;
 import com.gdx.wallpaper.environment.type.SwapEnvironment;
 
@@ -32,9 +28,6 @@ public enum EnvironmentType {
           SlideEnvironmentModel.class, SlideEnvironmentPreviewRenderer.class, "slide.frag"),
     CUBE(R.string.environment_type_cube, CubeEnvironment.class, CubeEnvironmentRenderer.class,
          CubeEnvironmentModel.class, CubeEnvironmentPreviewRenderer.class, "cube.frag"),
-    PAGE_CURL(R.string.environment_type_page_curl, PageCurlEnvironment.class, PageCurlEnvironmentRenderer.class,
-              PageCurlEnvironmentModel.class, PageCurlEnvironmentPreviewRenderer.class,
-              "pageCurl.frag"),
     SWAP(R.string.environment_type_swap, SwapEnvironment.class, SwapEnvironmentRenderer.class,
          SwapEnvironmentModel.class, SwapEnvironmentPreviewRenderer.class, "swap.frag");
 

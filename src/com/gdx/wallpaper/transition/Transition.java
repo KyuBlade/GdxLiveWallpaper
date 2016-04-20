@@ -93,7 +93,7 @@ public abstract class Transition implements ShaderValidatable {
         this.random = random;
     }
 
-    public boolean isDisplayCyclingProgress() {
+    public boolean isDisplayPauseProgress() {
         return displayCyclingProgress;
     }
 

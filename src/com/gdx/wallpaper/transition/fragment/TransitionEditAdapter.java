@@ -99,7 +99,7 @@ public class TransitionEditAdapter extends BaseAdapter {
                     convertView = inflater
                             .inflate(R.layout.transition_progress_list_item, parent, false);
                     final CheckableListItem displayProgressItemView = (CheckableListItem) convertView;
-                    displayProgressItemView.setChecked(transition.isDisplayCyclingProgress());
+                    displayProgressItemView.setChecked(transition.isDisplayPauseProgress());
                     displayProgressItemView.setOnCheckedChangeListener(
                             new CompoundButton.OnCheckedChangeListener() {
                                 @Override

@@ -12,6 +12,6 @@ public class TransitionDisplayCyclingProgressUpdateOperation implements
     @Override
     public void provide(Transition object, ContentValues values) {
         values.put(DatabaseHelper.TransitionColumns.DISPLAY_CYCLING_PROGRESS,
-                   object.isDisplayCyclingProgress());
+                   object.isDisplayPauseProgress());
     }
 }

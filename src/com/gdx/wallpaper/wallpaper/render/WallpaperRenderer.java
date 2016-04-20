@@ -24,6 +24,8 @@ import com.gdx.wallpaper.collection.CollectionManager;
 import com.gdx.wallpaper.environment.Environment;
 import com.gdx.wallpaper.environment.EnvironmentManager;
 import com.gdx.wallpaper.environment.renderer.AbstractEnvironmentRenderer;
+import com.gdx.wallpaper.environment.renderer.CubeEnvironmentRenderer;
+import com.gdx.wallpaper.environment.type.CubeEnvironment;
 import com.gdx.wallpaper.image.ImageManager;
 import com.gdx.wallpaper.playlist.Playlist;
 import com.gdx.wallpaper.transition.Transition;
@@ -32,7 +34,6 @@ import com.gdx.wallpaper.wallpaper.WallpaperGestureDetector;
 import com.gdx.wallpaper.wallpaper.WallpaperHomeInfo;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 public class WallpaperRenderer implements Renderer {
 
@@ -123,14 +124,12 @@ public class WallpaperRenderer implements Renderer {
                         constructor =
                         envClazz.getConstructor(environment.getClass(), ImageManager.class,
                                                 Transition.class, Batch.class, Skin.class);
-                envRenderer = constructor
-                        .newInstance(environment, imageManager, transition, batch, skin);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+//                envRenderer = constructor
+//                        .newInstance(environment, imageManager, transition, batch, skin);
+                envRenderer =
+                        new CubeEnvironmentRenderer(new CubeEnvironment(20, "", 5), imageManager,
+                                                    transition, batch,
+                                                    skin);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
@@ -154,7 +153,7 @@ public class WallpaperRenderer implements Renderer {
         imageManager.update();
 
         if (envRenderer != null) {
-            envRenderer.render(delta);
+            envRenderer.internalRender(delta);
         }
 
         uiStage.getViewport().apply();
@@ -162,7 +161,7 @@ public class WallpaperRenderer implements Renderer {
         uiStage.draw();
 
         accumulator += delta;
-        if(accumulator >= 1f) {
+        if (accumulator >= 1f) {
             accumulator = 0f;
             Log.i("RenderFrame", "FPS : " + Gdx.graphics.getFramesPerSecond());
         }

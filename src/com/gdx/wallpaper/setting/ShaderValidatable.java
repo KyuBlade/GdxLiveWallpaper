@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 public interface ShaderValidatable {
 
     /**
-     * Will update the shader in next frame.
+     * Will render the shader in next frame.
      */
     void invalidate();
 
@@ -15,7 +15,7 @@ public interface ShaderValidatable {
     void validate(ShaderProgram shader);
 
     /**
-     * @return needs shader update or not.
+     * @return needs shader render or not.
      */
     boolean isValidate(ShaderProgram shader);
 }
