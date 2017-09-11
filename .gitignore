@@ -1,7 +1,7 @@
 /libs/jni/armeabi-v7a/libgapii.so
 /libs/jni/armeabi-v7a/gapir.apk
 ### Gradle template
-.gradle
+.gradle/
 build/
 
 # Ignore Gradle GUI config
@@ -11,16 +11,20 @@ gradle-app.setting
 !gradle-wrapper.jar
 ### Java template
 *.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+bin/
+gen/
 
 # Package Files #
 *.jar
 *.war
 *.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# IDE files
+.settings/
+.idea/
+.classpath
+.project
+*.iml
 
-# Created by .ignore support plugin (hsz.mobi)
+# Others
+local.properties

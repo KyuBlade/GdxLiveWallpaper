@@ -225,11 +225,10 @@ public abstract class AbstractTransitionRenderer<T extends Transition> {
         quad.draw(shader);
         shader.end();
 
-//        batch.begin();
-//        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
-//        indicator.draw(batch, 1f);
-//
-//        batch.end();
+        batch.begin();
+        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
+        indicator.draw(batch, 1f);
+        batch.end();
         frameBuffer.end();
     }
 
