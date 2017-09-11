@@ -10,6 +10,8 @@ import com.badlogic.gdx.backends.android.AndroidLiveWallpaper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.profiling.GLErrorListener;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -58,6 +60,13 @@ public class WallpaperRenderer implements Renderer {
     private float accumulator;
 
     public WallpaperRenderer(Playlist playlist) {
+        GLProfiler.enable();
+        GLProfiler.listener = new GLErrorListener() {
+            @Override
+            public void onError(int error) {
+                Log.i("GLProfiler", "Error : " + GLProfiler.resolveErrorNumber(error));
+            }
+        };
         assetManager = new AssetManager();
         uiViewport = new ScreenViewport();
         batch = new SpriteBatch(100);
@@ -151,6 +160,7 @@ public class WallpaperRenderer implements Renderer {
 
     @Override
     public void update(float delta) {
+        GLProfiler.reset();
         imageManager.update();
 
         if (envRenderer != null) {
@@ -162,9 +172,13 @@ public class WallpaperRenderer implements Renderer {
         uiStage.draw();
 
         accumulator += delta;
-        if(accumulator >= 1f) {
+        if (accumulator >= 1f) {
             accumulator = 0f;
-            Log.i("RenderFrame", "FPS : " + Gdx.graphics.getFramesPerSecond());
+            Log.i("GLProfiler", "FPS : " + Gdx.graphics.getFramesPerSecond());
+//            Log.i("GLProfiler", "Draw calls : " + GLProfiler.drawCalls + "\nVertex count : " +
+//                    GLProfiler.vertexCount.latest + "\nShader switches : " +
+//                    GLProfiler.shaderSwitches + "\nTexture bindings : " +
+//                    GLProfiler.textureBindings);
         }
     }
 
